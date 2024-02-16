@@ -6,7 +6,7 @@ function SearchBar({ setSearchQuery }) {
         <TextField
             placeholder="Search for a task..."
             size="small"
-            fullWidth="true"
+            fullWidth={true}
             onInput={(e) => {
                 console.log(e.target.value);
                 // setSearchQuery(e.target.value);
