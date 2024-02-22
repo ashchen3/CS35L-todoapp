@@ -19,7 +19,7 @@ function AddItemButton({ onClick, buttonText, isClicked }) {
                 </Fragment>
             ) : (
                 <Fragment>
-                    <ArrowDropUpIcon /> Close
+                    <ArrowDropUpIcon /> Hide
                 </Fragment>
             )}
         </Fab>

@@ -3,6 +3,7 @@ import { Button, CardActionArea, CardActions } from '@mui/material';
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import React from "react";
+import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
 
 /**
  * Some styles for a single Card.
@@ -10,8 +11,7 @@ import React from "react";
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
-    // padding: theme.spacing(1),
-    textAlign: "center",
+    textAlign: "left",
     color: theme.palette.text.secondary,
 }));
 
@@ -25,13 +25,13 @@ function CategoryCard({ props }) {
             <Card>
                 <CardActionArea>
                     <CardContent>
-                        <Typography variant="h5">
+                        <Typography variant="h6">
                             {props.category}
                         </Typography>
                     </CardContent>
                 </CardActionArea>
                 <CardActions>
-                    <Button size="small">Share</Button>
+                    <Button size="small" startIcon={<AddCircleOutline />}>Add Task</Button>
                 </CardActions>
             </Card>
         </Item>

@@ -1,4 +1,5 @@
 import { Backdrop, Box, Button, TextField } from "@mui/material";
+import ChecklistIcon from '@mui/icons-material/Checklist';
 import React from "react";
 
 function NewListForm({ props }) {
@@ -20,6 +21,7 @@ function NewListForm({ props }) {
                     variant="outlined"
                     color="primary"
                     size="small"
+                    startIcon={<ChecklistIcon/>}
                 >
                     Add list
                 </Button>
