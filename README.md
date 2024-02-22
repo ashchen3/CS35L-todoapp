@@ -12,6 +12,8 @@ Step 2: Install required dependencies
 ```bash
 cd client
 npm install
+npm install @mui/material @emotion/react @emotion/styled
+npm install react-router-dom
 ```
 
 Step 3: Run application
