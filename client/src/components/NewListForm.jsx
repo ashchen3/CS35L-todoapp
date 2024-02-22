@@ -8,7 +8,7 @@ function NewListForm({ props }) {
             <form onSubmit={props.onSubmit}>
                 <TextField
                     type="text"
-                    label="Enter a category"
+                    label="List Name"
                     size="small"
                     value={props.category}
                     onChange={props.onChange}
