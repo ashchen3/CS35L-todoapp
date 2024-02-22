@@ -1,4 +1,5 @@
 import { Card, CardContent, Typography } from "@mui/material";
+import { Button, CardActionArea, CardActions } from '@mui/material';
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import React from "react";
@@ -22,9 +23,16 @@ function CategoryCard({ props }) {
     return (
         <Item>
             <Card>
-                <CardContent>
-                    <Typography variant="h5">{props.category}</Typography>
-                </CardContent>
+                <CardActionArea>
+                    <CardContent>
+                        <Typography variant="h5">
+                            {props.category}
+                        </Typography>
+                    </CardContent>
+                </CardActionArea>
+                <CardActions>
+                    <Button size="small">Share</Button>
+                </CardActions>
             </Card>
         </Item>
     );

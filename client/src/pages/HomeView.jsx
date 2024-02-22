@@ -71,7 +71,7 @@ function HomeView() {
     };
 
     return (
-        <Box sx={{ px: 5, py: 1 }} id="home">
+        <Box sx={{ px: 5, py: 1, bgcolor: 'primary.background'}} id="home">
             {/* Search bar and profile icon */}
             <Box sx={{ display: "flex" }}>
                 <SearchBar />
