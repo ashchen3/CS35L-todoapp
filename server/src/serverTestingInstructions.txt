@@ -11,13 +11,13 @@ curl -X POST -H "Content-Type: application/json" -d '{"text": "myPassword"}' htt
 --> This example creates a new user called "John" with password "myPassword"
 
 Get All Usernames:
-curl localhost:3000//api/users
+curl localhost:3000/api/users
 
 Get Todos in List:
-curl localhost:3000//api/todos/cars
+curl localhost:3000/api/todos/cars
 --> returns all todos in list "cars"
 
 Get All List Names:
-curl localhost:3000//api/lists
+curl localhost:3000/api/lists
 --> returns all list Names
 
