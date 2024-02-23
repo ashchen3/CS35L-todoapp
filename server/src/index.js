@@ -8,7 +8,7 @@ const authenticate = require('./auth');
 app.use(express.json());
 
 // For testing purposes, this is an in-memory solution to storing lists. We will need to implement peristence soon
-const todoLists = {};
+const todoLists = {}; //object which will store arrays
 
 // For testing get/post, not yet implemented 
 let usersList = {};
@@ -16,7 +16,7 @@ let usersList = {};
 // Serve static files from the 'public' directory
 app.use(express.static('public'));
 
-// API endpoint to add a new todo
+// add todo to an existing list
 //use fetch('/api/todos/${listName}') to access this api
 app.post('/api/todos/:listName', (req, res) => {
   const listName = req.params.listName;
@@ -55,6 +55,24 @@ app.get('/api/todos/:listName', (req, res) =>{
     const listName = req.params.listName;
     const todos = todoLists[listName] || [];
     res.json(todos);
+});
+
+//edit todo (at index) in list
+app.post('/api/todos/:listName/:index', (req, res) =>{
+    const listName = req.params.listName;
+    const index = req.params.index;
+    const newMessage = req.body.text;
+    const originalMessage = todoLists[listName][index].text;
+
+    if (!todoLists[listName] || index < 0 || index >= todoLists[listName].length) {
+        res.json("Invalid list name or index");
+        return;
+    }
+
+    todoLists[listName][index].text = newMessage;
+
+    res.json(`Changed todo ${originalMessage} in list ${listName} to todo `)
+
 });
 
 //get all list names
