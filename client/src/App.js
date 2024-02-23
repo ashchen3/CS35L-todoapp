@@ -1,26 +1,38 @@
 import "./App.css";
 import logo from "./logo.svg";
 import HomeView from "./pages/HomeView";
+import LoginView from "./pages/LoginView";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { deepPurple } from '@mui/material/colors';
+
+
+
+const theme = createTheme({
+  palette: {
+    background: { 
+        default: deepPurple[50] 
+    },
+    primary: {
+      main: deepPurple[300],
+    },
+    secondary: {
+      main: deepPurple[300],
+    },
+  },
+});
+
 
 function App() {
     return (
-        // <div className="App">
-        //   <header className="App-header">
-        //     <img src={logo} className="App-logo" alt="logo" />
-        //     <p>
-        //       CS35l is fun
-        //     </p>
-        //     <a
-        //       className="App-link"
-        //       href="https://reactjs.org"
-        //       target="_blank"
-        //       rel="noopener noreferrer"
-        //     >
-        //     Learn React
-        //   </a>
-        //   </header>
-        // </div>
-        <HomeView />
+        <ThemeProvider theme={theme}>
+             <Router>
+              <Routes>
+                <Route path="/" element={<LoginView />} />
+                <Route path="/home" element={<HomeView />} />
+              </Routes>
+            </Router>
+        </ThemeProvider>
     );
 }
 
