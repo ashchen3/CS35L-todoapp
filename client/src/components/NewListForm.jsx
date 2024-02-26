@@ -1,5 +1,5 @@
-import { Backdrop, Box, Button, TextField } from "@mui/material";
 import ChecklistIcon from '@mui/icons-material/Checklist';
+import { Backdrop, Box, Button, TextField } from "@mui/material";
 import React from "react";
 
 function NewListForm({ props }) {
@@ -27,17 +27,6 @@ function NewListForm({ props }) {
                 </Button>
             </form>
         </Box>
-    );
-}
-
-function DisplayForm() {
-    return (
-        <Backdrop open={true}>
-            <Box>
-                Hello
-                <button>Press me</button>
-            </Box>
-        </Backdrop>
     );
 }
 
