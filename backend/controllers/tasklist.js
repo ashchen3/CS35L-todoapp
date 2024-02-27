@@ -1,8 +1,8 @@
 const models = require('../database/models');
-//create empty list
+//create new list
 const createList = async (req,res) => {
     try{
-        const list = await models.Task.create(req.body);
+        const list = await models.TaskList.create(req.body);
         return res.status(201).json({
             list,
           });
@@ -56,10 +56,11 @@ const deleteList = async (req, res) => {
         const deleted = await models.TaskList.destroy({
             where: {id: listID}
         })
-    }catch (error){
         if (deleted){
-            return res.status(500).send(error.message);
+            return res.status(204).send("List Deleted");
         }
+    }catch (error){
+        return res.status(500).send(error.message);
     }
 }
 
