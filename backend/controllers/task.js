@@ -25,7 +25,7 @@ const deleteTask = async (req, res) => {
 }
 
 //update a task
-const updateList = async (req, res) => {
+const updateTask = async (req, res) => {
     try{
         const {taskID} = req.params;
         const [updated] = await models.TaskList.update(req.body,{
@@ -41,7 +41,7 @@ const updateList = async (req, res) => {
 }
 
 //get task title and description
-const getList = async (req, res) => {
+const getTask = async (req, res) => {
     try{
         const {taskID} = req.params;
         const task = await models.Task.findOne({
