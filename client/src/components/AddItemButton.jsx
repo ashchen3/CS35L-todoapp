@@ -15,11 +15,11 @@ function AddItemButton({ onClick, buttonText, isClicked }) {
         >
             {isClicked ? (
                 <Fragment>
-                    <AddIcon /> {buttonText}
+                    <ArrowDropUpIcon /> Hide
                 </Fragment>
             ) : (
                 <Fragment>
-                    <ArrowDropUpIcon /> Hide
+                    <AddIcon /> {buttonText}
                 </Fragment>
             )}
         </Fab>

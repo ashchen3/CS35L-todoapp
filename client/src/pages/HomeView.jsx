@@ -81,7 +81,7 @@ function HomeView() {
             {/* Create new list button and form to add list, if clicked */}
             <AddItemButton
                 onClick={handleFormDisplay}
-                isClicked={!displayNewListForm}
+                isClicked={displayNewListForm}
                 buttonText="Create New List"
             />
             {displayNewListForm && (
