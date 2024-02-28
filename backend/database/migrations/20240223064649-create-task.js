@@ -16,6 +16,10 @@ module.exports = {
       description: {
         type: Sequelize.TEXT
       },
+      completed: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN
+      },
       deadline: {
         type: Sequelize.DATE
       },

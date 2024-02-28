@@ -18,6 +18,7 @@ module.exports = {
         title: "Chicken",
         description:
           "~250g",
+        completed: false,
         deadline: new Date(2024, 1, 23),
         createdAt: new Date(),
         updatedAt: new Date()
@@ -27,6 +28,7 @@ module.exports = {
         title: "Brocolli",
         description:
           "2 stalks",
+        completed: false, 
         deadline: new Date(2024, 1, 23),
         createdAt: new Date(),
         updatedAt: new Date()
@@ -36,6 +38,7 @@ module.exports = {
         title: "Pasta",
         description:
           "Penne, 1 Packet of 250g",
+        completed: false,
         deadline: new Date(2024, 1, 23),
         createdAt: new Date(),
         updatedAt: new Date()
@@ -45,6 +48,7 @@ module.exports = {
         title: "Pick up kid from preschool",
         description:
           "Leave by 5pm else the jam will start",
+        completed: false,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -53,6 +57,7 @@ module.exports = {
         title: "Chicken",
         description:
           "~250g",
+        completed: false,
         deadline: new Date(2024, 1, 23),
         createdAt: new Date(),
         updatedAt: new Date()
@@ -62,6 +67,7 @@ module.exports = {
         title: "Brocolli",
         description:
           "2 stalks",
+        completed: false,
         deadline: new Date(2024, 1, 23),
         createdAt: new Date(),
         updatedAt: new Date()
@@ -71,6 +77,7 @@ module.exports = {
         title: "Pasta",
         description:
           "Penne, 1 Packet of 250g",
+        completed: false,
         deadline: new Date(2024, 1, 23),
         createdAt: new Date(),
         updatedAt: new Date()
@@ -80,6 +87,7 @@ module.exports = {
         title: "Oranges",
         description:
           "Get 20",
+        completed: false,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -88,6 +96,7 @@ module.exports = {
         title: "Dumplings",
         description:
           "Get 2 packs, at least 30",
+        completed: false,
         createdAt: new Date(),
         updatedAt: new Date()
       },

@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.TaskList, {
+      this.belongsTo(models.Tasklist, {
         foreignKey: 'tasklistId',
         as: 'parent-tasklist',
         onDelete: 'CASCADE'
@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
   Task.init({
     title: { type: DataTypes.STRING, allowNull: false },
     description: DataTypes.TEXT,
+    completed:  { type: DataTypes.BOOLEAN, allowNull: false },
     deadline: DataTypes.DATE,
     tasklistId: { type: DataTypes.INTEGER, allowNull: false }
   }, {

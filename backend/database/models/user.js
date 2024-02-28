@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.hasMany(models.TaskList, {
+      this.hasMany(models.Tasklist, {
         foreignKey: 'userId',
         as: 'tasklists',
         onDelete: 'CASCADE'

@@ -3,18 +3,19 @@ const controllers = require('../controllers');
 
 const router = Router();
 
-router.get('/', (req, res) => res.send('Welcome'))
+// CRUD for tasklists
+router.get('/lists', controllers.Tasklist.getAllTasklists);
+router.get('/lists/:tasklistId', controllers.Tasklist.getTasklistById);
+router.post('/lists', controllers.Tasklist.createTasklist);
+router.put('/lists/:tasklistId', controllers.Tasklist.updateTasklist);
+router.delete('/lists/:tasklistId',controllers.Tasklist.deleteTasklist);
 
-//CRUD for TaskList
-router.post('/lists', controllers.createPost);
-router.get('/list/:listID', controllers.getList);
-router.delete('/lists/:listID',controllers.deleteList);
-router.put('/lists/:listID', controllers.updateList);
-
+/* TODO: CRUD for tasks
 router.post('/task', controllers.getTask);
 router.get('/tasks/:taskID', controllers.getTask);
 router.delete('tasks/:taskID', controllers.deleteTask);
 router.put('/lists/:taskID', controllers.updateList);
+*/
 
 
 module.exports = router;
