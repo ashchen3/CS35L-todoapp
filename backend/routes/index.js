@@ -17,5 +17,7 @@ router.delete('tasks/:taskID', controllers.deleteTask);
 router.put('/lists/:taskID', controllers.updateList);
 */
 
-
+router.post('/users', controllers.User.createUser);
+router.delete('/users', controllers.User.deleteUser);
+router.get('/users', controllers.User.verifyUser);
 module.exports = router;

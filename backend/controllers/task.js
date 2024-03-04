@@ -1,4 +1,5 @@
 const models = require('../database/models');
+
 //create new task
 const createTask = async (req,res) => {
     try{
@@ -54,3 +55,10 @@ const getTask = async (req, res) => {
         return res.status(500).send(error.message);
     }
 }
+
+module.exports = {
+    createTask,
+    deleteTask,
+    updateTask,
+    getTask
+};
