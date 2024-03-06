@@ -1,6 +1,6 @@
 const models = require('../database/models');
 
-const noUserIdError = new Error("userId not provided. Please provide it at the top level of the JSON transmitted");
+const noUserIdError = new Error("userId not provided. Please provide it in the query string");
 const noTasklistIdError = new Error("tasklistId not provided in URL. Please provided the id literal as if it is a subdirectory e.g. /api/lists/1");
 const authenticationError = new Error('Unauthorized access');
 
@@ -8,7 +8,7 @@ const authenticationError = new Error('Unauthorized access');
 const createTasklist = async (req,res) => {
 
     try{
-        if(!req.body.userId) throw noUserIdError;
+        if(!req.query.userId) throw noUserIdError;
 
         const tasklist = await models.TaskList.create(req.body);
         return res.status(201).json({ tasklist });
@@ -22,7 +22,7 @@ const createTasklist = async (req,res) => {
 const getAllTasklists = async (req, res) => {
 
     try {
-        const userId = req.body.userId;
+        const userId = req.query.userId;
         if (!userId) throw noUserIdError;
 
         const tasklists = await models.Tasklist.findAll({
@@ -44,7 +44,7 @@ const getAllTasklists = async (req, res) => {
 const getTasklistById = async (req, res) => {
 
     try{
-        const userId = req.body.userId;
+        const userId = req.query.userId;
         if (!userId) throw noUserIdError;
         const { tasklistId } = req.params;
         if (!tasklistId) throw noTasklistIdError;
@@ -72,7 +72,7 @@ const getTasklistById = async (req, res) => {
 const updateTasklist = async (req, res) => {
 
     try{
-        const userId = req.body.userId;
+        const userId = req.query.userId;
         if (!userId) throw noUserIdError;
         const { tasklistId } = req.params;
         if (!tasklistId) throw noTasklistIdError;
@@ -100,7 +100,7 @@ const updateTasklist = async (req, res) => {
 const deleteTasklist = async (req, res) => {
 
     try{
-        const userId = req.body.userId;
+        const userId = req.query.userId;
         if (!userId) throw noUserIdError;
         const { tasklistId } = req.params;
         if (!tasklistId) throw noTasklistIdError;
@@ -112,7 +112,7 @@ const deleteTasklist = async (req, res) => {
         const deleted = await models.Tasklist.destroy({
             where: { id: tasklistId }
         });
-        if (deleted) return res.status(204).send("Tasklist with id " + tasklistId + " deleted");
+        if (deleted) return res.status(204);
         else return res.status(500).send('Delete failed on the backend');
 
     } catch (error){
@@ -120,4 +120,10 @@ const deleteTasklist = async (req, res) => {
     }
 }
 
-module.exports = { createTasklist, getAllTasklists, getTasklistById, updateTasklist, deleteTasklist };
+module.exports = { 
+    createTasklist, 
+    getAllTasklists, 
+    getTasklistById, 
+    updateTasklist, 
+    deleteTasklist
+};

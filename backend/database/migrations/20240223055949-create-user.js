@@ -17,6 +17,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       pwdhash: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       salt: {

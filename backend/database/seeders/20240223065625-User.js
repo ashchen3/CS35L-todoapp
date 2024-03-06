@@ -16,24 +16,28 @@ module.exports = {
       {
         username: 'janedoe',
         email: 'janedoe@example.com',
+        pwdhash: 'password',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         username: 'jondoe',
         email: 'jondoe@example.com',
+        pwdhash: '12345',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         username: 'chuawh',
         email: 'chuachuachua@example.com',
+        pwdhash: 'ilikeaazel',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         username: 'aritra',
         email: 'ariiraari@example.com',
+        pwdhash: 'ihatevvv',
         createdAt: new Date(),
         updatedAt: new Date(),
       }

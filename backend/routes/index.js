@@ -10,14 +10,21 @@ router.post('/lists', controllers.Tasklist.createTasklist);
 router.put('/lists/:tasklistId', controllers.Tasklist.updateTasklist);
 router.delete('/lists/:tasklistId',controllers.Tasklist.deleteTasklist);
 
+// CRUD for tasks
+router.get('/tasks', controllers.Task.getAllTasks);
+router.get('/tasks/:taskId', controllers.Task.getTaskById);
+router.put('/tasks/:taskId', controllers.Task.updateTask);
+router.delete('/tasks/:taskId', controllers.Task.deleteTask);
+
 /* TODO: CRUD for tasks
 router.post('/task', controllers.getTask);
-router.get('/tasks/:taskID', controllers.getTask);
-router.delete('tasks/:taskID', controllers.deleteTask);
 router.put('/lists/:taskID', controllers.updateList);
 */
 
+// CRUD for Users
+router.post('/login', controllers.User.verifyUser);
 router.post('/users', controllers.User.createUser);
 router.delete('/users', controllers.User.deleteUser);
-router.get('/users', controllers.User.verifyUser);
+
+
 module.exports = router;
