@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import categoriesData from "../data/categories.json"; // TEMP
 
 import AddItemButton from "../components/AddItemButton";
 import NewListForm from "../components/NewListForm";
