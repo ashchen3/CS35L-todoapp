@@ -13,6 +13,7 @@ router.delete('/lists/:tasklistId',controllers.Tasklist.deleteTasklist);
 // CRUD for tasks
 router.get('/tasks', controllers.Task.getAllTasks);
 router.get('/tasks/:taskId', controllers.Task.getTaskById);
+router.post('/tasks', controllers.Task.createTask);
 router.put('/tasks/:taskId', controllers.Task.updateTask);
 router.delete('/tasks/:taskId', controllers.Task.deleteTask);
 
