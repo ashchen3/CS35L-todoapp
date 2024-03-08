@@ -1,13 +1,15 @@
 import { Box } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
 import "./App.css";
-import logo from "./logo.svg";
 import HomeView from "./pages/HomeView";
 import ListView from "./pages/ListView";
 import LoginView from "./pages/LoginView";
-import useAuth, { AuthProvider } from "./services/AuthContext";
+import AnonymousRoute from "./routes/AnonymousRoute";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import { AuthProvider } from "./services/AuthContext";
 
 const theme = createTheme({
     palette: {
@@ -23,23 +25,20 @@ const theme = createTheme({
     },
 });
 
-const ProtectedRoute = () => {
-    const { token } = useAuth();
-    if (token === null) {
-        return <Navigate to="/login" replace />;
-    }
-    return <Outlet />
-};
-
 function App() {
     return (
-        <Box sx={{ m: 0, p: 0, height: "100vh" }}>
-            <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+            <Box sx={{ m: 0, p: 0, height: "100vh" }}>
                 <BrowserRouter>
                     <AuthProvider>
                         <Routes>
+                            {/* Default route */}
                             <Route path="*" element={<Navigate to="/" replace />} />
-                            <Route path="/login" element={<LoginView />} />
+                            {/* Only non-logged in users can access login page */}
+                            <Route element={<AnonymousRoute />}>
+                                <Route path="/login" element={<LoginView />} />
+                            </Route>
+                            {/* Only logged in users can access other routes */}
                             <Route element={<ProtectedRoute />}>
                                 <Route path="/" element={<HomeView />} />
                                 <Route path="/list" element={<ListView />} />
@@ -47,8 +46,8 @@ function App() {
                         </Routes>
                     </AuthProvider>
                 </BrowserRouter>
-            </ThemeProvider>
-        </Box>
+            </Box>
+        </ThemeProvider>
     );
 }
 
