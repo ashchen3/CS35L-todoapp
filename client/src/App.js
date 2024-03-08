@@ -28,7 +28,6 @@ const ProtectedRoute = () => {
     if (token === null) {
         return <Navigate to="/login" replace />;
     }
-    console.log("User is authenticated with token");
     return <Outlet />
 };
 

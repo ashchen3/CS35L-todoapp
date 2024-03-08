@@ -13,10 +13,10 @@ import useAuth from "../services/AuthContext";
 /**
  * Contains the following components:
  * - SearchBar
- * - ProfileIcone
+ * - ProfileIcon
  * - AddItemButton ("Create new list")
  * - NewListForm (rendered if above button is clicked)
- * - TaskListCard (display list of categories)
+ * - TaskListCard (display list of tasks)
  */
 function HomeView() {
     const { token } = useAuth();
@@ -31,10 +31,6 @@ function HomeView() {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: token,
-                },
-                params: {
-                    userId: 1,
-                    token: "test-token",
                 },
             })
             .then((res) => setTasklists(res.data))

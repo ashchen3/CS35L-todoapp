@@ -19,7 +19,7 @@ import useAuth from "../services/AuthContext";
  */
 function ProfileIcon() {
     const [anchorEl, setAnchorEl] = useState(null);
-    const { user, logout } = useAuth();
+    const { username, logout } = useAuth();
 
     /** Sets the anchor element to the profile icon once it's clicked. */
     const handleOpen = (e) => {
@@ -74,7 +74,7 @@ function ProfileIcon() {
             >
                 <MenuItem>
                     <AccountCircle sx={{ mr: 1 }} />
-                    <Typography variant="h6">{user}</Typography>
+                    <Typography variant="h6">{username}</Typography>
                 </MenuItem>
                 <Divider />
                 <MenuItem onClick={handleClose}>
