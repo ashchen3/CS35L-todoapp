@@ -8,6 +8,7 @@ import NewListForm from "../components/NewListForm";
 import ProfileIcon from "../components/ProfileIcon";
 import SearchBar from "../components/SearchBar";
 import TaskListCard from "../components/TaskListCard";
+import useAuth from "../services/AuthContext";
 
 /**
  * Contains the following components:
@@ -18,6 +19,7 @@ import TaskListCard from "../components/TaskListCard";
  * - TaskListCard (display list of categories)
  */
 function HomeView() {
+    const { token } = useAuth();
     const [tasklists, setTasklists] = useState();
     const [displayNewListForm, setDisplayNewListForm] = useState(false);
 
@@ -28,11 +30,12 @@ function HomeView() {
             .get("http://localhost:3000/api/lists", {
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: token,
                 },
                 params: {
                     userId: 1,
-                    token: "test-token"
-                }
+                    token: "test-token",
+                },
             })
             .then((res) => setTasklists(res.data))
             .catch((err) => console.error(err));

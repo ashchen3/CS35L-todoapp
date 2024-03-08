@@ -23,14 +23,12 @@ const theme = createTheme({
     },
 });
 
-const ProtectedRoute = ({ children }) => {
-    const { user } = useAuth();
-    console.log(`User is: ${user}`);
-    if (user === null) {
+const ProtectedRoute = () => {
+    const { token } = useAuth();
+    if (token === null) {
         return <Navigate to="/login" replace />;
     }
-    console.log(`User is authenticated: ${user}`);
-    // return children;
+    console.log("User is authenticated with token");
     return <Outlet />
 };
 

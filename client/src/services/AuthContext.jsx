@@ -12,7 +12,7 @@ const AuthContext = createContext({
 const AuthProvider = ({ children }) => {
     // Get current session from local state if any
     const [user, setUser] = useState(localStorage.getItem("userId") || null);
-    // const [token, setToken] = useState(localStorage.getItem("token") || null);
+    const [token, setToken] = useState(localStorage.getItem("token") || null);
     const navigate = useNavigate();
 
     const login = (data) => {
@@ -27,26 +27,26 @@ const AuthProvider = ({ children }) => {
         //     .catch((err) => console.log(err));
         data = {
             userId: 1,
-            token: "sample-token",
+            token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcwOTg1OTE5NCwiZXhwIjoxNzA5ODYyNzk0fQ.vBrgZFTvk528ViIRR52eSU3G3z6uVlJCcoIseuo5ung",
         };
         if (data) {
             setUser(data.userId);
-            // setToken(token);
+            setToken(data.token);
 
-            localStorage.setItem("userId", data.userId);
-            console.log(`User logged in with userId: ${data.userId}`);
+            localStorage.setItem("token", data.token);
+            // console.log(`User logged in with userId: ${data.userId}`);
             navigate("/home");
         }
     };
 
     const logout = () => {
         setUser(null);
-        // setToken(null);
-        localStorage.removeItem("userId");
+        setToken(null);
+        localStorage.removeItem("token");
         navigate("/");
     };
 
-    return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ user, token, login, logout }}>{children}</AuthContext.Provider>;
 };
 
 const useAuth = () => {
