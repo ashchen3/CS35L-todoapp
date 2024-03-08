@@ -3,6 +3,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
+import { useNavigate } from "react-router-dom";
 import AddItemButton from "../components/AddItemButton";
 import NewListForm from "../components/NewListForm";
 import ProfileIcon from "../components/ProfileIcon";
@@ -19,7 +20,7 @@ import useAuth from "../services/AuthContext";
  * - TaskListCard (display list of tasks)
  */
 function HomeView() {
-    const { token } = useAuth();
+    const { token, logout } = useAuth();
     const [tasklists, setTasklists] = useState();
     const [displayNewListForm, setDisplayNewListForm] = useState(false);
 
@@ -34,7 +35,12 @@ function HomeView() {
                 },
             })
             .then((res) => setTasklists(res.data))
-            .catch((err) => console.error(err));
+            .catch((err) => {
+                if (err.response.status === 401) {
+                    alert("You need to login again!");
+                    logout();
+                }
+            });
     }, []);
 
     /**
