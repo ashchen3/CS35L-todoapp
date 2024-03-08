@@ -1,10 +1,13 @@
-const { and } = require('sequelize');
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
 const models = require('../database/models');
 
 const noUsernameError = new Error("Username not provided. Please provide it at the top level of the JSON transmitted");
 const noPasswordError = new Error("Password not provided. Please provide it in the JSON transmitted");
 const authenticationError = new Error('Incorrect username or password');
 
+// Requires no authorization token, but will not hand out tokens
+// Login with newly created account to obtain token
 const createUser = async (req, res) => {
 
     try{
@@ -22,8 +25,8 @@ const createUser = async (req, res) => {
 
         const user = await models.User.create(req.body);
 
-        userID = user.id;
-        return res.status(201).json({ userID });
+        if(!user) return res.status(500).send('User creation failed on the backend');
+        return res.status(201).send("Account created. Please login");
 
     } catch (error) {
         return res.status(500).json({ error: error.message });
@@ -52,6 +55,7 @@ const deleteUser = async (req,res) => {
     }
 }
 
+// Requires no authentication token, since it is the callback that issues the tokens
 const verifyUser = async (req, res) => {
     
     try{
@@ -65,9 +69,14 @@ const verifyUser = async (req, res) => {
                 message: "Incorrect username or password"
             });
 
+        const token = jwt.sign(
+            { userId: checkUser.id }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: '1h' }
+        );
         return res.status(200).json({
             message: "User Verified",
-            userId: user.id
+            token: token
         });
 
     } catch (error){
