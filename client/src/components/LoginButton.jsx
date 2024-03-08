@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import useAuth from '../services/AuthContext';
 
 
 function LoginButton() {
-  const navigate = useNavigate();   //navigate to the homeview
+  // const navigate = useNavigate();   //navigate to the homeview
   const [isLoggedIn, setIsLoggedIn] = useState(false);  //track login status (status will change to true without authentication right now)
   const [username, setUsername] = useState(''); // Track username input
   const [password, setPassword] = useState(''); // Track password input
+  const {login} = useAuth();
 
 
   const handleLogin = () => {
@@ -20,11 +22,11 @@ function LoginButton() {
      * 
      * 
      */
-
-    setIsLoggedIn(true);    //update status to be authenticated
+    login({username, password});
+    // setIsLoggedIn(true);    //update status to be authenticated
 
     //redirect to home view upon successful login
-    navigate('/home');
+    // navigate('/home');
     
   };
 

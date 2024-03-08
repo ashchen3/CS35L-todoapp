@@ -1,12 +1,13 @@
 import { Box } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import logo from "./logo.svg";
 import HomeView from "./pages/HomeView";
 import ListView from "./pages/ListView";
 import LoginView from "./pages/LoginView";
+import useAuth, { AuthProvider } from "./services/AuthContext";
 
 const theme = createTheme({
     palette: {
@@ -22,17 +23,33 @@ const theme = createTheme({
     },
 });
 
+const ProtectedRoute = ({ children }) => {
+    const { user } = useAuth();
+    console.log(`User is: ${user}`);
+    if (user === null) {
+        return <Navigate to="/login" replace />;
+    }
+    console.log(`User is authenticated: ${user}`);
+    // return children;
+    return <Outlet />
+};
+
 function App() {
     return (
         <Box sx={{ m: 0, p: 0, height: "100vh" }}>
             <ThemeProvider theme={theme}>
-                <Router>
-                    <Routes>
-                        <Route path="/" element={<LoginView />} />
-                        <Route path="/home" element={<HomeView />} />
-                        <Route path="/list" element={<ListView />} />
-                    </Routes>
-                </Router>
+                <BrowserRouter>
+                    <AuthProvider>
+                        <Routes>
+                            <Route path="*" element={<Navigate to="/" replace />} />
+                            <Route path="/login" element={<LoginView />} />
+                            <Route element={<ProtectedRoute />}>
+                                <Route path="/" element={<HomeView />} />
+                                <Route path="/list" element={<ListView />} />
+                            </Route>
+                        </Routes>
+                    </AuthProvider>
+                </BrowserRouter>
             </ThemeProvider>
         </Box>
     );

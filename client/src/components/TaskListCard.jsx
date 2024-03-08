@@ -1,10 +1,8 @@
-import { Card, CardContent, Typography } from "@mui/material";
-import { Button, CardActions } from '@mui/material';
+import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
+import { Box, Button, Card, CardActions, CardContent, TextField, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
-import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
-import {Box, TextField} from "@mui/material"
 
 /**
  * Some styles for a single Card.
@@ -17,21 +15,22 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 /**
- * A single Card component that displays the list's category.
+ * A single Card component that displays the tasklist.
  */
 // TODO: add more fields
-function CategoryCard({ props }) {
+function TaskListCard({tasklist}) {
 
     const handleAddTask = () => {
         //TODO: handle adding a task
     };
+    // console.log(tasklist);
 
     return (
         <Item>
             <Card>
                 <CardContent>
                     <Typography variant="h6">
-                        {props.category}
+                        {tasklist.title}
                     </Typography>
                 </CardContent>
                 <CardActions>
@@ -57,4 +56,4 @@ function CategoryCard({ props }) {
     );
 }
 
-export default CategoryCard;
+export default TaskListCard;

@@ -2,13 +2,12 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import categoriesData from "../data/categories.json"; // TEMP
 
 import AddItemButton from "../components/AddItemButton";
-import CategoryCard from "../components/CategoryCard";
 import NewListForm from "../components/NewListForm";
 import ProfileIcon from "../components/ProfileIcon";
 import SearchBar from "../components/SearchBar";
+import TaskListCard from "../components/TaskListCard";
 
 /**
  * Contains the following components:
@@ -16,29 +15,33 @@ import SearchBar from "../components/SearchBar";
  * - ProfileIcone
  * - AddItemButton ("Create new list")
  * - NewListForm (rendered if above button is clicked)
- * - CategoryCard (display list of categories)
+ * - TaskListCard (display list of categories)
  */
 function HomeView() {
-    const [categories, setCategories] = useState([]);
+    const [tasklists, setTasklists] = useState();
     const [displayNewListForm, setDisplayNewListForm] = useState(false);
 
-    // Fetch and update categories
+    // Fetch and update tasklists
     useEffect(() => {
-        setCategories(categoriesData);
-        // axios.get("categoriesEndpoint")
-        //     .then((res) => res.data.json())
-        //     .then((data) => setCategories(data))
-        //     .catch(err => console.error(err));
+        console.log("GET tasklists from /api/lists");
+        axios
+            .get("http://localhost:3000/api/lists", {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                params: {
+                    userId: 1,
+                    token: "test-token"
+                }
+            })
+            .then((res) => setTasklists(res.data))
+            .catch((err) => console.error(err));
     }, []);
-    // }, [categories]);
-    // TODO: here we will set `categories` as a dependency once backend API
-    // is set up, so that the latest data is retrieved once `categories`
-    // is updated. For now, set empty list and let client display changes.
 
     /**
      * Resets the input form with default values (empty).
      */
-    const resetForm = () => ({ category: "" });
+    const resetForm = () => ({ tasklist: "" });
     const [newListFormData, setNewListFormData] = useState(resetForm);
 
     /**
@@ -46,7 +49,7 @@ function HomeView() {
      * is the sole source of truth.
      */
     const handleInputChange = (e) => {
-        setNewListFormData({ category: e.target.value });
+        setNewListFormData({ tasklist: e.target.value });
     };
 
     /**
@@ -56,7 +59,7 @@ function HomeView() {
      * - Reset form (and prevent default behavior)
      */
     const handleFormSubmit = (e) => {
-        setCategories([...categories, newListFormData.category]);
+        setTasklists([...tasklists, newListFormData.tasklist]);
         e.preventDefault();
         setNewListFormData(resetForm);
     };
@@ -71,7 +74,7 @@ function HomeView() {
     };
 
     return (
-        <Box sx={{ px: 5, py: 1, bgcolor: 'primary.background'}} id="home">
+        <Box sx={{ px: 5, py: 1, bgcolor: "primary.background" }} id="home">
             {/* Search bar and profile icon */}
             <Box sx={{ display: "flex" }}>
                 <SearchBar />
@@ -87,14 +90,14 @@ function HomeView() {
             {displayNewListForm && (
                 <NewListForm
                     props={{
-                        category: newListFormData.category,
+                        tasklist: newListFormData.tasklist,
                         onChange: handleInputChange,
                         onSubmit: handleFormSubmit,
                     }}
                 />
             )}
 
-            {/* List each of the categories added */}
+            {/* List each of the tasklists added */}
             <Grid
                 container
                 rowSpacing={{ xs: 1, sm: 2 }}
@@ -102,13 +105,9 @@ function HomeView() {
                 sx={{ my: 1 }}
                 id="home-list"
             >
-                {/* TODO: give unique key */}
-                {categories.map((category, index) => (
-                    <Grid xs={10} sm={6} md={4}>
-                        <CategoryCard
-                            props={{ category: category }}
-                            key={index}
-                        />
+                {tasklists?.map((tasklist) => (
+                    <Grid xs={10} sm={6} md={4} key={tasklist.id}>
+                        <TaskListCard tasklist={tasklist} />
                     </Grid>
                 ))}
             </Grid>
