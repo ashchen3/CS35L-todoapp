@@ -12,25 +12,27 @@ const Item = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(1),
     textAlign: 'center',
     color: theme.palette.text.secondary,
-    height: 'calc(100vh - 48px)', // Adjust based on your header/footer height
+    height: 'calc(100vh - 48px)', 
   }));
   
 function getDate(daysInTheFuture = 0) {
     const today = new Date();
-    today.setDate(today.getDate() + daysInTheFuture); // Adjust the date by the number of days in the future
+    //Adjusts the date by the number of days in the future or today if parameter empty
+    today.setDate(today.getDate() + daysInTheFuture); 
 
     const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const dayOfWeek = weekdays[today.getDay()]; // Get the weekday name
+    const dayOfWeek = weekdays[today.getDay()];
 
-    const month = today.getMonth() + 1; // JavaScript months are 0-based, so add 1 to normalize
+    //Add 1 to get current month
+    const month = today.getMonth() + 1; e
     const date = today.getDate();
 
-    // Split weekday and date into separate lines for display
+    //Weekday and date in separate lines for display
     return {weekday: dayOfWeek, monthDate: `${month}/${date}`};
 }
   
 function FormRow() {
-  // Generate an array [0, 1, 2, 3, 4] for the next 5 days including today
+  //Generate array for today and next 4 days
   const daysArray = Array.from({ length: 5 }, (_, index) => index);
 
   return (
@@ -43,7 +45,7 @@ function FormRow() {
             component="div"
             sx={{
               textAlign: 'center',
-              pt: 2, // Adds top padding uniformly for all items
+              pt: 2,
             }}
           >
             {(() => {
@@ -76,3 +78,4 @@ function CalendarView() {
 }
 
 export default CalendarView;
+
