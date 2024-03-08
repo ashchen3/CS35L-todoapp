@@ -19,10 +19,12 @@ const createTask = async (req,res) => {
 }
 
 // Returns all tasks tagged to a tasklist
+// Uses the userId from JWT to check ownership of the tasklist
 const getAllTasks = async (req, res) => {
 
     try{
-        const { userId, tasklistId } = req.query;
+        const userId = req.userId;
+        const { tasklistId } = req.query;
         if (!tasklistId) throw noTasklistIdError;
 
         const tasks = await models.Task.findAll({
@@ -33,7 +35,7 @@ const getAllTasks = async (req, res) => {
             }]
         });
 
-        if(!userId || (tasks && tasks.length && userId != tasks[0]["parent-tasklist"].userId))
+        if(tasks && tasks.length && userId != tasks[0]["parent-tasklist"].userId)
             return res.status(403).send("Unauthorized access");
 
         if(!tasks) return res.status(500).send('Retrieval failed on the backend');
@@ -47,10 +49,11 @@ const getAllTasks = async (req, res) => {
 }
 
 // Returns one task based on the taskId provided
+// Uses the userId from JWT to check ownership of the task's parent tasklist
 const getTaskById = async (req, res) => {
 
     try{
-        const userId = req.query.userId;
+        const userId = req.userId;
         const { taskId } = req.params;
         if (!taskId) throw noTaskIdError;
         
@@ -65,9 +68,10 @@ const getTaskById = async (req, res) => {
 }
 
 // Update the fields of a task based on the JSON fields passed. Requires a taskId to be passed to determine which task to update
+// Uses the userId from JWT to check ownership of the task's parent tasklist
 const updateTask = async (req, res) => {
     try{
-        const userId = req.query.userId;
+        const userId = req.userId;
         const { taskId } = req.params;
         if (!taskId) throw noTaskIdError;
 
@@ -88,10 +92,11 @@ const updateTask = async (req, res) => {
 }
 
 // Delete a task based on the taskId
+// Uses the userId from JWT to check ownership of the task's parent tasklist
 const deleteTask = async (req, res) => {
 
     try{
-        const userId = req.query.userId;
+        const userId = req.userId;
         const { taskId } = req.params;
         if (!taskId) throw noTaskIdError;
 
@@ -101,7 +106,7 @@ const deleteTask = async (req, res) => {
         const deleted = await models.Task.destroy({
             where: { id: taskId }
         });
-        if (deleted) return res.status(204);
+        if (deleted) return res.status(204).send("Task deleted");
         else return res.status(500).send('Deletion failed on the backend');
 
     } catch (error) {
@@ -119,7 +124,7 @@ const getSingleTask = async (userId, taskId, res) => {
         }]
     });
 
-    if(!userId || (task && task["parent-tasklist"] && userId != task["parent-tasklist"].userId))
+    if(task && task["parent-tasklist"] && userId != task["parent-tasklist"].userId)
         return { result: res.status(403).send("Unauthorized access"), success: false };
 
     if (!task) return { result: res.status(404).send('Task does not exist for that id'), success: false };

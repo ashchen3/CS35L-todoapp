@@ -8,9 +8,9 @@ const authenticationError = new Error('Unauthorized access');
 const createTasklist = async (req,res) => {
 
     try{
-        if(!req.query.userId) throw noUserIdError;
+        req.body.userId = req.userId;
 
-        const tasklist = await models.TaskList.create(req.body);
+        const tasklist = await models.Tasklist.create(req.body);
         return res.status(201).json({ tasklist });
 
     } catch (error){
@@ -18,12 +18,11 @@ const createTasklist = async (req,res) => {
     }
 }
 
-// Returns all tasklists belonging to a user
+// Returns all tasklists belonging to a user (userId obtained from JWT)
 const getAllTasklists = async (req, res) => {
 
     try {
-        const userId = req.query.userId;
-        if (!userId) throw noUserIdError;
+        const userId = req.userId;
 
         const tasklists = await models.Tasklist.findAll({
             where: { userId: userId },
@@ -40,12 +39,11 @@ const getAllTasklists = async (req, res) => {
 };
 
 // Returns one tasklist based on the tasklistId provided
-// For now, uses the userId as authentication
+// Uses the userId from JWT to check ownership of tasklist
 const getTasklistById = async (req, res) => {
 
     try{
-        const userId = req.query.userId;
-        if (!userId) throw noUserIdError;
+        const userId = req.userId;
         const { tasklistId } = req.params;
         if (!tasklistId) throw noTasklistIdError;
 
@@ -61,7 +59,7 @@ const getTasklistById = async (req, res) => {
         if (tasklist.userId != userId) throw authenticationError;
 
         if (tasklist) return res.status(200).json(tasklist);
-        else return res.status(404).send('Tasklist with the speciifed ID does not exist');
+        else return res.status(404).send();
 
     } catch (error){
         return res.status(500).send(error.message);
@@ -69,11 +67,11 @@ const getTasklistById = async (req, res) => {
 }
 
 // Update the fields of a tasklist based on the JSON fields passed. Requires a tasklistId to be passed to determine which tasklist to update
+// Uses the userId from JWT to check ownership of tasklist
 const updateTasklist = async (req, res) => {
 
     try{
-        const userId = req.query.userId;
-        if (!userId) throw noUserIdError;
+        const userId = req.userId;
         const { tasklistId } = req.params;
         if (!tasklistId) throw noTasklistIdError;
 
@@ -96,12 +94,11 @@ const updateTasklist = async (req, res) => {
 }
 
 // Delete a tasklist based on the tasklistId
-// TODO: Ensure that the authorization token authenticates the user as the userId for that tasklist
+// Uses the userId from JWT to check ownership of tasklist
 const deleteTasklist = async (req, res) => {
 
     try{
-        const userId = req.query.userId;
-        if (!userId) throw noUserIdError;
+        const userId = req.userId;
         const { tasklistId } = req.params;
         if (!tasklistId) throw noTasklistIdError;
 
@@ -112,7 +109,8 @@ const deleteTasklist = async (req, res) => {
         const deleted = await models.Tasklist.destroy({
             where: { id: tasklistId }
         });
-        if (deleted) return res.status(204);
+
+        if (deleted) return res.status(204).send("Tasklist deleted");
         else return res.status(500).send('Delete failed on the backend');
 
     } catch (error){
