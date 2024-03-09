@@ -1,6 +1,5 @@
 const models = require('../database/models');
 
-const noUserIdError = new Error("userId not provided. Please provide it in the query string");
 const noTasklistIdError = new Error("tasklistId not provided in URL. Please provided the id literal as if it is a subdirectory e.g. /api/lists/1");
 const authenticationError = new Error('Unauthorized access');
 
@@ -19,18 +18,23 @@ const createTasklist = async (req,res) => {
 }
 
 // Returns all tasklists belonging to a user (userId obtained from JWT)
+// If the sendTasks flag (query string param) is set to 0, the associated tasks will not be sent. By default, this flag is set to 1
 const getAllTasklists = async (req, res) => {
 
     try {
         const userId = req.userId;
+        const sendTasks = req.query.sendTasks || 1;
 
-        const tasklists = await models.Tasklist.findAll({
+        var findTasklistOptions = {
             where: { userId: userId },
             include: [{
                 model: models.Task,
                 as: 'tasks',
             }]
-        });
+        };
+        if (sendTasks == 0) delete findTasklistOptions.include;
+
+        const tasklists = await models.Tasklist.findAll(findTasklistOptions);
         return res.status(200).json(tasklists);
 
     } catch (error) {

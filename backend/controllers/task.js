@@ -1,8 +1,7 @@
 const models = require('../database/models');
 
-const noTasklistIdError = new Error("tasklistId not provided. Please provide it at the top level of the JSON transmitted");
+const noTasklistIdError = new Error("tasklistId not provided. Please provide it as a URL query param");
 const noTaskIdError = new Error("taskId not provided in URL. Please provided the id literal as if it is a subdirectory e.g. /api/tasks/1");
-
 
 // Create new task (all keys for which allowNull is false have to be in the JSON passed)
 const createTask = async (req,res) => {
