@@ -5,6 +5,9 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import CalendarTaskList from '../components/CalendarTaskList';
+
+
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -37,8 +40,8 @@ function FormRow() {
 
   return (
     <React.Fragment>
-      {daysArray.map((day) => (
-        <Grid item xs={2} key={day}>
+      {daysArray.map((day, index) => (
+        <Grid item xs={2.2} key={day}>
           <Typography
             variant="body1"
             gutterBottom
@@ -52,13 +55,35 @@ function FormRow() {
               const { weekday, monthDate } = getDate(day);
               return (
                 <>
-                  <Box component="span" sx={{ fontWeight: 'bold' }}>{weekday}</Box><br />
-                  <Box component="span" sx={{ fontWeight: 'bold', color: 'primary.main' }}>{monthDate}</Box>
+                    <Box
+                    component="span"
+                    sx={{
+                        typography: 'h5',
+                        fontWeight: 'bold',
+                         // Background color
+                    }}
+                    >
+                    {weekday}
+                    </Box>
+                    <br />
+                    <Box
+                    component="span"
+                    sx={{
+                        typography: 'h6',
+                        fontWeight: 'bold',
+                        color: index === 0 ? 'white' : 'primary.main',
+                        bgcolor: index === 0 ? 'primary.main' : 'none',
+                        p: 0.8, // Padding
+                        borderRadius: 4,
+                    }}
+                    >
+                    {monthDate}
+                    </Box>
                 </>
               );
             })()}
           </Typography>
-          <Item>Item</Item>
+          <Item>Sample Item</Item>
         </Grid>
       ))}
     </React.Fragment>

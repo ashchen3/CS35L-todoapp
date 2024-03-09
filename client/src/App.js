@@ -21,15 +21,21 @@ const theme = createTheme({
             main: deepPurple[500],
         },
         secondary: {
-            main: deepPurple[300],
+            main: deepPurple['A100'],
         },
+        dark: {
+            main: deepPurple[900],
+        },
+        alt: {
+            main: deepPurple['A400'],
+        }
     },
 });
 
 function App() {
     return (
         <ThemeProvider theme={theme}>
-            <Box sx={{ m: 0, p: 0, height: "100vh" }}>
+            <Box sx={{ m: 0, p: 0, height: "100vh"}}>
                 <BrowserRouter>
                     <AuthProvider>
                         <Routes>
