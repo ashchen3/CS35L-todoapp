@@ -2,7 +2,9 @@ import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import DoneIcon from "@mui/icons-material/Done";
 import { Box, List, ListItem, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
+import useAuth from "../services/AuthContext";
 import AddItemButton from "./AddItemButton";
 
 function DraggableTaskItem({ task, index }) {
@@ -84,6 +86,7 @@ function DroppableTaskList({ data, listId }) {
 function DragDropList({ tasklist }) {
     const [completedTasks, setCompletedTasks] = useState();
     const [uncompletedTasks, setUncompletedTasks] = useState();
+    const { token, logout } = useAuth();
 
     useEffect(() => {
         setCompletedTasks(tasklist?.tasks?.filter((t) => t.completed));
@@ -102,6 +105,7 @@ function DragDropList({ tasklist }) {
         if (!result.destination) {
             return;
         }
+        const taskId = parseInt(result.draggableId);
 
         // Determine where item is dragged from and to, as a boolean flag
         const fromCompleted = result.source.droppableId === "completed";
@@ -121,14 +125,35 @@ function DragDropList({ tasklist }) {
 
         // Different source and destination, insert object at new location
         destCopy.splice(result.destination.index, 0, removed);
-        // TODO: make a PUT request to server to update completion status
-        removed.completed = toCompleted;
-
-        // Update corresponding completed and uncompleted tasks state
         const setSource = fromCompleted ? setCompletedTasks : setUncompletedTasks;
         const setDest = toCompleted ? setCompletedTasks : setUncompletedTasks;
-        setSource(sourceCopy);
-        setDest(destCopy);
+        
+        // Send a PUT request to server to update completion status
+        axios
+            .put(
+                `http://localhost:3000/api/tasks/${taskId}`,
+                {
+                    completed: toCompleted,
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: token,
+                    },
+                }
+                )
+            .then(() => {
+                // Update corresponding completed and uncompleted tasks state
+                removed.completed = toCompleted;
+                setSource(sourceCopy);
+                setDest(destCopy);
+            })
+            .catch((err) => {
+                if (err.response.status === 401) {
+                    alert("You need to login again!");
+                    logout();
+                }
+            });
     };
 
     return (
@@ -136,7 +161,7 @@ function DragDropList({ tasklist }) {
             container
             columnGap={5}
             rowGap={0}
-            sx={{ justifyContent: "center", height: { xs: "50%", sm: "100%"} }}
+            sx={{ justifyContent: "center", height: { xs: "50%", sm: "100%" } }}
         >
             <DragDropContext onDragEnd={dragEnd}>
                 <Grid xs={12} sm={5.5} sx={{ p: 2 }}>
