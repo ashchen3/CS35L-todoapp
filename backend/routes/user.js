@@ -5,6 +5,6 @@ const rootRouter = Router();
 
 // User Login and Creation
 rootRouter.post('/login', controllers.User.verifyUser);
-rootRouter.post('/users', controllers.User.createUser);
+rootRouter.post('/signup', controllers.User.createUser);
 
 module.exports = rootRouter;
