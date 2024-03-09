@@ -44,19 +44,21 @@ function getTasksByDeadline(jsonData, inputDate) {
     return matchingTasks;
 }
 
-const CalendarTaskList = () => {
+const CalendarTaskList = ({ selectedDate }) => {
 
-    const [currentDate, setCurrentDate] = useState(new Date());
-    const tasksDue = getTasksByDeadline(sampleData, currentDate);
+    const [tasksDue, setTasksDue] = useState([]);
+
+    useEffect(() => {
+        const filteredTasks = getTasksByDeadline(sampleData, selectedDate);
+        setTasksDue(filteredTasks);
+    }, [selectedDate]);
 
     return (
         <div>
-        <Typography variant="h5">Tasks Due Today</Typography>
-        <Typography variant="h7">{currentDate.toLocaleString()}</Typography>
         {tasksDue.length > 0 ? (
             <TaskList tasks={tasksDue} />
         ) : (
-            <Typography variant="body1">No tasks due today.</Typography>
+            <Typography variant="body1">No tasks due</Typography>
         )}
         </div>
     );
