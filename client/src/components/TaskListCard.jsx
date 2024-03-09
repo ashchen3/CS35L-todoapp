@@ -8,6 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
+import { CardActionArea, CardActions } from "@mui/material";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -106,18 +107,18 @@ function TaskListCard({ tasklist }) {
         <Item>
             <Card>
                 {/* Display task title and description */}
-                <CardContent>
-                    <Typography variant="h5">
-                        <Link
-                            to="/list"
-                            state={{ selectedTasklistId: tasklist.id }}
-                            style={{ textDecoration: "none" }}
-                        >
-                            {tasklist.title}
-                        </Link>
-                    </Typography>
-                    <Typography variant="subtitle1">{tasklist.description}</Typography>
-                </CardContent>
+                <CardActionArea 
+                    component={Link} 
+                    to="/list" 
+                    state={{ selectedTasklistId: tasklist.id }}
+                    style={{ textDecoration: "none" }}>
+                    <CardContent>
+                        <Typography variant="h5" color="primary">
+                                {tasklist.title}
+                        </Typography>
+                        <Typography variant="subtitle1">{tasklist.description}</Typography>
+                    </CardContent>
+                </CardActionArea>
                 <Divider />
                 {/* Display number of uncompleted tasks and a dropdown button */}
                 <CardContent sx={{ py: 1, display: "flex", alignItems: "center" }}>
