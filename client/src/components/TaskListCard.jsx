@@ -9,6 +9,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 /**
  * Some styles for a single Card.
@@ -106,7 +107,15 @@ function TaskListCard({ tasklist }) {
             <Card>
                 {/* Display task title and description */}
                 <CardContent>
-                    <Typography variant="h5">{tasklist.title}</Typography>
+                    <Typography variant="h5">
+                        <Link
+                            to="/list"
+                            state={{ selectedTasklistId: tasklist.id }}
+                            style={{ textDecoration: "none" }}
+                        >
+                            {tasklist.title}
+                        </Link>
+                    </Typography>
                     <Typography variant="subtitle1">{tasklist.description}</Typography>
                 </CardContent>
                 <Divider />

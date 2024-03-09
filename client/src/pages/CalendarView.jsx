@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
+import * as React from 'react';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -24,7 +24,7 @@ function getDate(daysInTheFuture = 0) {
     const dayOfWeek = weekdays[today.getDay()];
 
     //Add 1 to get current month
-    const month = today.getMonth() + 1; e
+    const month = today.getMonth() + 1;
     const date = today.getDate();
 
     //Weekday and date in separate lines for display

@@ -4,6 +4,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import "./App.css";
+import CalendarView from "./pages/CalendarView";
 import HomeView from "./pages/HomeView";
 import ListView from "./pages/ListView";
 import LoginView from "./pages/LoginView";
@@ -42,6 +43,7 @@ function App() {
                             <Route element={<ProtectedRoute />}>
                                 <Route path="/" element={<HomeView />} />
                                 <Route path="/list" element={<ListView />} />
+                                <Route path="/calendar" element={<CalendarView />} />
                             </Route>
                         </Routes>
                     </AuthProvider>

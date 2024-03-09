@@ -3,12 +3,11 @@ import DoneIcon from "@mui/icons-material/Done";
 import { Box, List, ListItem, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import React, { useEffect, useState } from "react";
-import testData from "../data/tasks.json";
 import AddItemButton from "./AddItemButton";
 
 function DraggableTaskItem({ task, index }) {
     return (
-        <Draggable key={task.tasklistId} draggableId={task.tasklistId} index={index}>
+        <Draggable key={task.id} draggableId={task.id.toString()} index={index}>
             {(provided, snapshot) => (
                 <ListItem
                     ref={provided.innerRef}
@@ -48,7 +47,7 @@ function DroppableTaskList({ data, listId }) {
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                 >
-                    {data.map((task, index) => (
+                    {data?.map((task, index) => (
                         <DraggableTaskItem task={task} index={index} key={index} />
                     ))}
                     {provided.placeholder}
@@ -58,16 +57,38 @@ function DroppableTaskList({ data, listId }) {
     );
 }
 
-function DragDropList({ category }) {
-    const [completedTasks, setCompletedTasks] = useState([]);
-    const [uncompletedTasks, setUncompletedTasks] = useState([]);
+/**
+ * Takes in a tasklist as prop, sample:
+ * {
+        "id": 3,
+        "title": "Errands for today",
+        "description": "Try to get everything done by 9pm",
+        "quickAccessTaskList": null,
+        "userId": 1,
+        "createdAt": "2024-02-28T09:03:28.136Z",
+        "updatedAt": "2024-02-28T09:03:28.136Z",
+        "tasks": [
+            {
+                "id": 4,
+                "title": "Pick up kid from preschool",
+                "description": "Leave by 5pm else the jam will start",
+                "completed": false,
+                "deadline": null,
+                "tasklistId": 3,
+                "createdAt": "2024-02-28T09:03:28.157Z",
+                "updatedAt": "2024-02-28T09:03:28.157Z"
+            }
+        ]
+    }
+ */
+function DragDropList({ tasklist }) {
+    const [completedTasks, setCompletedTasks] = useState();
+    const [uncompletedTasks, setUncompletedTasks] = useState();
 
     useEffect(() => {
-        console.log(category);
-        // TODO: GET data from API using `category`
-        setUncompletedTasks(testData.filter((task) => !task.completed));
-        setCompletedTasks(testData.filter((task) => task.completed));
-    }, []);
+        setCompletedTasks(tasklist?.tasks?.filter((t) => t.completed));
+        setUncompletedTasks(tasklist?.tasks?.filter((t) => !t.completed));
+    }, [tasklist]);
 
     /**
      * Handles when an item is dragged to somewhere.
@@ -111,9 +132,14 @@ function DragDropList({ category }) {
     };
 
     return (
-        <Grid container columnGap={5} rowGap={0} sx={{ justifyContent: "center", height: "100%" }}>
+        <Grid
+            container
+            columnGap={5}
+            rowGap={0}
+            sx={{ justifyContent: "center", height: { xs: "50%", sm: "100%"} }}
+        >
             <DragDropContext onDragEnd={dragEnd}>
-                <Grid xs={12} md={5.5} sx={{ p: 2 }}>
+                <Grid xs={12} sm={5.5} sx={{ p: 2 }}>
                     <Stack
                         sx={{
                             height: "10%",
@@ -125,13 +151,13 @@ function DragDropList({ category }) {
                         }}
                     >
                         <AddItemButton onClick={() => {}} buttonText="" isClicked={false} />
-                        <Typography variant="h5" color="primary" sx={{pl: 2}}>
+                        <Typography variant="h5" color="primary" sx={{ pl: 2 }}>
                             Uncompleted
                         </Typography>
                     </Stack>
                     <DroppableTaskList data={uncompletedTasks} listId="uncompleted" />
                 </Grid>
-                <Grid xs={12} md={5.5} sx={{ p: 2 }}>
+                <Grid xs={12} sm={5.5} sx={{ p: 2 }}>
                     <Stack
                         sx={{
                             height: "10%",

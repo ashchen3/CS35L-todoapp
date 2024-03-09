@@ -3,7 +3,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AddItemButton from "../components/AddItemButton";
 import NewListForm from "../components/NewListForm";
 import ProfileIcon from "../components/ProfileIcon";

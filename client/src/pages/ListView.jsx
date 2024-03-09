@@ -1,16 +1,73 @@
 import { Box, Typography } from "@mui/material";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import DragDropList from "../components/DragDropList";
+import useAuth from "../services/AuthContext";
 
-function ListView({ categoryProp }) {
-    const category = "groceries"; // TEMP
+/**
+ * Takes in a tasklist as prop, sample:
+ * {
+        "id": 3,
+        "title": "Errands for today",
+        "description": "Try to get everything done by 9pm",
+        "quickAccessTaskList": null,
+        "userId": 1,
+        "createdAt": "2024-02-28T09:03:28.136Z",
+        "updatedAt": "2024-02-28T09:03:28.136Z",
+        "tasks": [
+            {
+                "id": 4,
+                "title": "Pick up kid from preschool",
+                "description": "Leave by 5pm else the jam will start",
+                "completed": false,
+                "deadline": null,
+                "tasklistId": 3,
+                "createdAt": "2024-02-28T09:03:28.157Z",
+                "updatedAt": "2024-02-28T09:03:28.157Z"
+            }
+        ]
+    }
+ */
+function ListView() {
+    const [tasklists, setTasklists] = useState(null);
+    const [selectedTasklist, setSelectedTasklist] = useState();
+    const { token, logout } = useAuth();
+    const location = useLocation();
+    const selectedTasklistId = location.state ? location.state.selectedTasklistId : null;
+
+    // Fetch and update tasklists' names and ids
+    useEffect(() => {
+        console.log("GET tasklists from /api/lists");
+        axios
+            .get("http://localhost:3000/api/lists", {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: token,
+                },
+            })
+            .then((res) => {
+                setTasklists(res.data);
+                if (selectedTasklistId) {
+                    setSelectedTasklist(res.data.filter((t) => t.id === selectedTasklistId)[0]);
+                }
+            })
+            .catch((err) => {
+                if (err.response.status === 401) {
+                    alert("You need to login again!");
+                    logout();
+                }
+            });
+    }, []);
 
     return (
-        <Box sx={{ px: 5, bgcolor: "primary.background", height: "100%" }} id="home">
+        <Box sx={{ px: 5, bgcolor: "primary.background", height: "100%" }} id="list">
+            {/* TODO: dropdown/navbar with all other tasklists here */}
             <Typography variant="h4" sx={{ py: 1 }}>
-                {category.charAt(0).toUpperCase() + category.slice(1)}
+                {selectedTasklist?.title}
             </Typography>
             <Box sx={{ height: "90%" }}>
-                <DragDropList category={category} />
+                <DragDropList tasklist={selectedTasklist} />
             </Box>
         </Box>
     );
