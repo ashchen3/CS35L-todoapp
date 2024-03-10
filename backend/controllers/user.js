@@ -84,14 +84,12 @@ const verifyUser = async (req, res) => {
     }
 }
 
-//Searching functionality for users, case-insensitive, partial matches are included
+// Searching functionality for users, case-insensitive, partial matches are included
 const findUser = async (req, res) => {
-    try{
-        const term = req.body.searchTerm;
 
-        if (!term){
-            return res.status(400).json({error: "No search term provided"});
-        }
+    try{
+        const term = req.query.searchTerm;
+        if (!term) return res.status(400).json({error: "No search term provided"});
 
         const users = await models.User.findAll({
             where: {
@@ -100,13 +98,13 @@ const findUser = async (req, res) => {
                 }
             }
         })
-
+        
+        if(!users) return res.status(500).send('User search failed on the backend');
         return res.status(200).json(users);
         
-    }catch (error){
+    } catch (error){
         return res.status(500).send(error.message);
     }
-
 }
 
 module.exports = {
