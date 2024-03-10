@@ -1,0 +1,74 @@
+[
+    {
+        "id": 1,
+        "title": "Buy Groceries",
+        "description": "Go to Ralphs on Friday",
+        "quickAccessTaskList": null,
+        "userId": 1,
+        "createdAt": "2024-02-28T09:03:28.136Z",
+        "updatedAt": "2024-02-28T09:03:28.136Z",
+        "tasks": [
+            {
+                "id": 1,
+                "title": "Chicken",
+                "description": "~250g",
+                "completed": false,
+                "deadline": "2024-03-11T08:00:00.000Z",
+                "tasklistId": 1,
+                "createdAt": "2024-02-28T09:03:28.157Z",
+                "updatedAt": "2024-02-28T09:03:28.157Z"
+            },
+            {
+                "id": 2,
+                "title": "Brocolli",
+                "description": "2 stalks",
+                "completed": false,
+                "deadline": "2024-03-13T08:00:00.000Z",
+                "tasklistId": 1,
+                "createdAt": "2024-02-28T09:03:28.157Z",
+                "updatedAt": "2024-02-28T09:03:28.157Z"
+            },
+            {
+                "id": 3,
+                "title": "Pasta",
+                "description": "Penne, 1 Packet of 250g",
+                "completed": false,
+                "deadline": "2024-03-11T08:00:00.000Z",
+                "tasklistId": 1,
+                "createdAt": "2024-02-28T09:03:28.157Z",
+                "updatedAt": "2024-02-28T09:03:28.157Z"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "title": "Errands for today",
+        "description": "Try to get everything done by 9pm",
+        "quickAccessTaskList": null,
+        "userId": 1,
+        "createdAt": "2024-02-28T09:03:28.136Z",
+        "updatedAt": "2024-02-28T09:03:28.136Z",
+        "tasks": [
+            {
+                "id": 4,
+                "title": "Pick up kid from preschool",
+                "description": "Leave by 5pm else the jam will start",
+                "completed": false,
+                "deadline": "2024-03-09T08:00:00.000Z",
+                "tasklistId": 3,
+                "createdAt": "2024-02-28T09:03:28.157Z",
+                "updatedAt": "2024-02-28T09:03:28.157Z"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Settle Taxes",
+        "description": "Damn IRS I hate you",
+        "quickAccessTaskList": null,
+        "userId": 1,
+        "createdAt": "2024-02-28T09:03:28.136Z",
+        "updatedAt": "2024-02-28T09:03:28.136Z",
+        "tasks": []
+    }
+]
