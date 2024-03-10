@@ -82,6 +82,3 @@ const CalendarTaskList = ({ selectedDate }) => {
 };
 
 export default CalendarTaskList;
-
-
-

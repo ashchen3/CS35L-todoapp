@@ -146,7 +146,7 @@ function NewListForm({ handleTasklistAdded }) {
             }}
             id="new-list-form"
         >
-            <Typography variant="h5" sx={{ mb: 1 }}>
+            <Typography variant="h5" sx={{ mb: "0.5em" }}>
                 New Tasklist
             </Typography>
             <form onSubmit={handleSubmit}>
