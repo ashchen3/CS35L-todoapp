@@ -19,7 +19,13 @@ apiRouter.post('/tasks', controllers.Task.createTask);
 apiRouter.put('/tasks/:taskId', controllers.Task.updateTask);
 apiRouter.delete('/tasks/:taskId', controllers.Task.deleteTask);
 
-// Delete User
+// API for User Deletion and Searching
 apiRouter.delete('/users', controllers.User.deleteUser);
+apiRouter.get('/users/search', controllers.User.findUser);
+
+//Check if Server is Running
+apiRouter.get('/', () => {
+    return res.status(500).send("Server Running");
+});
 
 module.exports = apiRouter;
