@@ -16,6 +16,8 @@ const createTasklist = async (req,res) => {
         if (tasks && tasks.length > 0){
             const tasksAdded = await models.Task.bulkCreate(
                 tasks.map(task => {
+                    if (task.deadline == "") delete task.deadline;
+                    if (!task.completed) task.completed = false;
                     task['tasklistId'] = tasklist.id;
                     return task;
                 })
