@@ -21,7 +21,7 @@ const theme = createTheme({
             main: deepPurple[500],
         },
         secondary: {
-            main: deepPurple['A100'],
+            main: deepPurple[50],
         },
         dark: {
             main: deepPurple[900],
