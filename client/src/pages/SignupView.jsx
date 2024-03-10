@@ -2,13 +2,13 @@ import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import React from "react";
 import { Link } from "react-router-dom";
-import LoginForm from "../components/LoginForm";
+import SignupForm from "../components/SignupForm";
 
 /**
  * Contains the following components:
- * - LoginForm
+ * - SignupForm
  */
-function LoginView() {
+function SignupView() {
     return (
         <Box
             sx={{
@@ -22,15 +22,15 @@ function LoginView() {
         >
             <Box>
                 <Typography variant="h4" sx={{ py: 2 }}>
-                    Log In
+                    Sign Up
                 </Typography>
-                <LoginForm />
+                <SignupForm />
                 <Typography variant="subtitle2" sx={{ pt: 2 }}>
-                    <Link to="/signup">Create account</Link>
+                    <Link to="/login">Back to log in</Link>
                 </Typography>
             </Box>
         </Box>
     );
 }
 
-export default LoginView;
+export default SignupView;

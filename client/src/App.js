@@ -8,6 +8,7 @@ import CalendarView from "./pages/CalendarView";
 import HomeView from "./pages/HomeView";
 import ListView from "./pages/ListView";
 import LoginView from "./pages/LoginView";
+import SignupView from "./pages/SignupView";
 import AnonymousRoute from "./routes/AnonymousRoute";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { AuthProvider } from "./services/AuthContext";
@@ -47,6 +48,7 @@ function App() {
                             {/* Only non-logged in users can access login page */}
                             <Route element={<AnonymousRoute />}>
                                 <Route path="/login" element={<LoginView />} />
+                                <Route path="/signup" element={<SignupView />} />
                             </Route>
                             {/* Only logged in users can access other routes */}
                             <Route element={<ProtectedRoute />}>
