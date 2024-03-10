@@ -7,7 +7,10 @@ const noTaskIdError = new Error("taskId not provided in URL. Please provided the
 const createTask = async (req,res) => {
 
     try{
-        if(!req.query.tasklistId) throw noTasklistIdError; 
+        if (!req.body.tasklistId) throw noTasklistIdError;
+
+        if (req.body.deadline == "") delete req.body.deadline;
+        if (!req.body.completed) req.body.completed = false;
 
         const task = await models.Task.create(req.body); 
         return res.status(201).json({task}); 

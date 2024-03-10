@@ -36,6 +36,12 @@ function ListView() {
     const location = useLocation();
     const selectedTasklistId = location.state ? location.state.selectedTasklistId : null;
 
+    /** Callback to handle when a task is added, namely update the `selectedTasklist` state. */
+    const handleTaskAdded = (task) => {
+        const newTasks = [...selectedTasklist.tasks, task];
+        setSelectedTasklist((prev) => ({...prev, tasks: newTasks}));
+    };
+
     // Fetch and update tasklists' names and ids
     useEffect(() => {
         console.log("GET tasklists from /api/lists");
@@ -63,11 +69,11 @@ function ListView() {
     return (
         <Box sx={{ px: 5, bgcolor: "primary.background", height: "100%" }} id="list">
             {/* TODO: dropdown/navbar with all other tasklists here */}
-            <Typography variant="h4" sx={{ py: 1 }}>
+            <Typography variant="h4" sx={{ pt: "1em" }}>
                 {selectedTasklist?.title}
             </Typography>
-            <Box sx={{ height: "90%" }}>
-                <DragDropList tasklist={selectedTasklist} />
+            <Box sx={{ height: "85%" }}>
+                <DragDropList tasklist={selectedTasklist} handleTaskAdded={handleTaskAdded}/>
             </Box>
         </Box>
     );
