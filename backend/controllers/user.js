@@ -84,8 +84,34 @@ const verifyUser = async (req, res) => {
     }
 }
 
+//Searching functionality for users, case-insensitive, partial matches are included
+const findUser = async (req, res) => {
+    try{
+        const term = req.body.searchTerm;
+
+        if (!term){
+            return res.status(400).json({error: "No search term provided"});
+        }
+
+        const users = await models.User.findAll({
+            where: {
+                username: {
+                    [models.Sequelize.Op.iLike] : `%${term}%`
+                }
+            }
+        })
+
+        return res.status(200).json(users);
+        
+    }catch (error){
+        return res.status(500).send(error.message);
+    }
+
+}
+
 module.exports = {
     createUser, 
     deleteUser,
-    verifyUser
+    verifyUser,
+    findUser
 };
