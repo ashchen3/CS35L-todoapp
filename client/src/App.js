@@ -13,6 +13,9 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import { AuthProvider } from "./services/AuthContext";
 
 const theme = createTheme({
+    typography: {
+        fontFamily: `"Nunito", "Roboto", "Helvetica", "Arial", sans-serif`,
+    },
     palette: {
         background: {
             default: deepPurple[50],
@@ -27,15 +30,15 @@ const theme = createTheme({
             main: deepPurple[900],
         },
         alt: {
-            main: deepPurple['A400'],
-        }
+            main: deepPurple["A400"],
+        },
     },
 });
 
 function App() {
     return (
         <ThemeProvider theme={theme}>
-            <Box sx={{ m: 0, p: 0, height: "100vh"}}>
+            <Box sx={{ m: 0, p: 0, height: "100vh" }}>
                 <BrowserRouter>
                     <AuthProvider>
                         <Routes>

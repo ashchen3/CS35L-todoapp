@@ -3,7 +3,6 @@ import Grid from "@mui/material/Unstable_Grid2";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-import { Link, useNavigate } from "react-router-dom";
 import AddItemButton from "../components/AddItemButton";
 import NewListForm from "../components/NewListForm";
 import ProfileIcon from "../components/ProfileIcon";
@@ -17,12 +16,17 @@ import useAuth from "../services/AuthContext";
  * - ProfileIcon
  * - AddItemButton ("Create new list")
  * - NewListForm (rendered if above button is clicked)
- * - TaskListCard (display list of tasks)
+ * - TaskListCard (display list of tasklists)
  */
 function HomeView() {
     const { token, logout } = useAuth();
     const [tasklists, setTasklists] = useState();
     const [displayNewListForm, setDisplayNewListForm] = useState(false);
+
+    /** Callback to handle when a tasklist is added, namely update `tasklists` state. */
+    const handleTasklistAdded = (tasklist) => {
+        setTasklists((prevTasklists) => [...prevTasklists, tasklist]);
+    };
 
     // Fetch and update tasklists
     useEffect(() => {
@@ -44,37 +48,10 @@ function HomeView() {
     }, []);
 
     /**
-     * Resets the input form with default values (empty).
-     */
-    const resetForm = () => ({ tasklist: "" });
-    const [newListFormData, setNewListFormData] = useState(resetForm);
-
-    /**
-     * Updates the state when user types in input, so that the React state
-     * is the sole source of truth.
-     */
-    const handleInputChange = (e) => {
-        setNewListFormData({ tasklist: e.target.value });
-    };
-
-    /**
-     * Handles when the "create new list" form is submitted.
-     * Does the following:
-     * - Updates React's `category` state (TODO: POST to server)
-     * - Reset form (and prevent default behavior)
-     */
-    const handleFormSubmit = (e) => {
-        setTasklists([...tasklists, newListFormData.tasklist]);
-        e.preventDefault();
-        setNewListFormData(resetForm);
-    };
-
-    /**
      * Toggles the form display when user clicks on the
      * "Create new list" button, resetting the form every time.
      */
     const handleFormDisplay = () => {
-        setNewListFormData(resetForm);
         setDisplayNewListForm(!displayNewListForm);
     };
 
@@ -82,7 +59,7 @@ function HomeView() {
         <Box sx={{ px: 5, py: 1, bgcolor: "primary.background" }} id="home">
             {/* Search bar and profile icon */}
             <Box sx={{ display: "flex" }}>
-                <SearchBar tasklistData={tasklists}/>
+                <SearchBar tasklistData={tasklists} />
                 <ProfileIcon />
             </Box>
 
@@ -92,15 +69,7 @@ function HomeView() {
                 isClicked={displayNewListForm}
                 buttonText="Create New List"
             />
-            {displayNewListForm && (
-                <NewListForm
-                    props={{
-                        tasklist: newListFormData.tasklist,
-                        onChange: handleInputChange,
-                        onSubmit: handleFormSubmit,
-                    }}
-                />
-            )}
+            {displayNewListForm && <NewListForm handleTasklistAdded={handleTasklistAdded} />}
 
             {/* List each of the tasklists added */}
             <Grid

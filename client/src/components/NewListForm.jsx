@@ -1,24 +1,25 @@
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {
-    Backdrop,
-    Box,
-    Button,
-    Checkbox,
-    Divider,
-    FormControlLabel,
-    IconButton,
-    TextField,
-    Typography,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import Divider from "@mui/material/Divider";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { MobileDateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import axios from "axios";
 import dayjs from "dayjs";
 import React, { useState } from "react";
 
-function NewListForm({ props }) {
+import useAuth from "../services/AuthContext";
+
+function NewListForm({ handleTasklistAdded }) {
+    const { token, logout } = useAuth();
+
     /** Resets the form to default values, when form loaded or submitted. */
     const resetForm = () => ({
         title: "",
@@ -27,7 +28,7 @@ function NewListForm({ props }) {
     });
     const [formData, setFormData] = useState(resetForm);
 
-    /** Handles when a form field is entered. */
+    /** Handles when a (basic) form field is entered. */
     const handleChange = (e, i) => {
         const { name, value } = e.target;
         if (name === "tasklist-title" || name === "tasklist-description") {
@@ -69,7 +70,17 @@ function NewListForm({ props }) {
         }));
     };
 
-    /** Handles when the "Add Task" button is clicked to add a new task. */
+    /** Handles when a task is set (or unset) to be completed. */
+    const handleCompletedChecked = (e, i) => {
+        const tasks = [...formData.tasks];
+        tasks[i]["completed"] = !tasks[i]["completed"];
+        setFormData((prevData) => ({
+            ...prevData,
+            tasks,
+        }));
+    };
+
+    /** Handles when the "Add Task" button is clicked to display a new row of inputs for a new task. */
     const handleAddTask = () => {
         setFormData((prevData) => ({
             ...prevData,
@@ -78,9 +89,11 @@ function NewListForm({ props }) {
                 {
                     title: "",
                     description: "",
-                    deadline: prevData.tasks.length
-                        ? prevData.tasks.at(-1).deadline
-                        : dayjs().toISOString(), // "autocomplete" feature to use the previous task's deadline
+                    deadline:
+                        prevData.tasks.length && prevData.tasks.at(-1).deadline
+                            ? prevData.tasks.at(-1).deadline
+                            : dayjs().toISOString(), // "autocomplete" feature to use the previous task's deadline
+                    completed: false,
                 },
             ],
         }));
@@ -99,10 +112,24 @@ function NewListForm({ props }) {
     /** POST the new form data to the server once form submitted */
     const handleSubmit = (e) => {
         e.preventDefault();
-        // TODO: POST to server
-        console.log("Form submitted");
-        console.log(formData);
-        setFormData(resetForm);
+        axios
+            .post("http://localhost:3000/api/lists/", formData, {
+                headers: {
+                    Authorization: token,
+                    "Content-Type": "application/json",
+                },
+            })
+            .then((res) => {
+                // Update the parent state, then clear form
+                handleTasklistAdded(res.data);
+                setFormData(resetForm);
+            })
+            .catch((err) => {
+                if (err.response.status === 401) {
+                    alert("You need to login again!");
+                    logout();
+                }
+            });
     };
 
     return (
@@ -189,7 +216,7 @@ function NewListForm({ props }) {
                                     name="task-deadline"
                                     value={task.deadline ? dayjs(task.deadline) : dayjs()}
                                     onChange={(v) => handleDeadlineChange(v, i)}
-                                    disabled={task.deadline === ""}
+                                    disabled={!task.deadline || task.completed}
                                     sx={{ width: "30%" }}
                                     required
                                 />
@@ -199,7 +226,14 @@ function NewListForm({ props }) {
                                 control={
                                     <Checkbox onClick={(e) => handleNoDeadlineChecked(e, i)} />
                                 }
+                                disabled={task.completed}
                                 label="No deadline"
+                            />
+                            <FormControlLabel
+                                sx={{ ml: 3 }}
+                                control={<Checkbox onClick={(e) => handleCompletedChecked(e, i)} />}
+                                disabled={!task.deadline}
+                                label="Completed"
                             />
                         </Box>
                     </Box>
