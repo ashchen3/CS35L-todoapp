@@ -30,8 +30,8 @@ import useAuth from "../services/AuthContext";
     }
  */
 function ListView() {
-    const [tasklists, setTasklists] = useState(null);
-    const [selectedTasklist, setSelectedTasklist] = useState();
+    const [tasklists, setTasklists] = useState([]);
+    const [selectedTasklist, setSelectedTasklist] = useState({});
     const { token, logout } = useAuth();
     const location = useLocation();
     const selectedTasklistId = location.state ? location.state.selectedTasklistId : null;

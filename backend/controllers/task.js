@@ -13,10 +13,10 @@ const createTask = async (req,res) => {
         if (!req.body.completed) req.body.completed = false;
 
         const task = await models.Task.create(req.body); 
-        return res.status(201).json({task}); 
+        return res.status(201).json(task); 
 
     } catch (error){
-        return res.status(500).json({error: error.message})
+        return res.status(500).json({error: error.message});
     }
 }
 
