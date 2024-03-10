@@ -8,8 +8,23 @@ const createTasklist = async (req,res) => {
 
     try{
         req.body.userId = req.userId;
+        const title = req.body.title;
+        const description = req.body.description;
+        const tasks = req.body.tasks;
 
-        const tasklist = await models.Tasklist.create(req.body);
+        const tasklist = await models.Tasklist.create({
+            title,
+            description
+        });
+
+        if (tasks && tasks.length > 0){
+            const taskstoAdd = await models.Task.bulkCreate(tasks.map(task => ({
+                title: tasks.title,
+                description: tasks.description,
+                deadline: tasks.deadline,
+                taskListID: newTaskList.id
+            })));
+        }
         return res.status(201).json({ tasklist });
 
     } catch (error){
