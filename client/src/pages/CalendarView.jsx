@@ -7,8 +7,6 @@ import * as React from 'react';
 
 import CalendarTaskList from '../components/CalendarTaskList';
 
-
-
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
@@ -33,6 +31,12 @@ function getDate(daysInTheFuture = 0) {
     //Weekday and date in separate lines for display
     return {weekday: dayOfWeek, monthDate: `${month}/${date}`};
 }
+
+function getAbsoluteDate(daysInTheFuture = 0) {
+    const today = new Date();
+    today.setDate(today.getDate() + daysInTheFuture); 
+    return today
+}
   
 function FormRow() {
   //Generate array for today and next 4 days
@@ -53,6 +57,8 @@ function FormRow() {
           >
             {(() => {
               const { weekday, monthDate } = getDate(day);
+              const { absoluteDate } = getAbsoluteDate(day);
+              
               return (
                 <>
                     <Box
@@ -79,11 +85,17 @@ function FormRow() {
                     >
                     {monthDate}
                     </Box>
+                    <Box sx={{ width: '100%'}}>
+                        <Item sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <CalendarTaskList selectedDate={getAbsoluteDate(day)}/>
+                    </Item>
+                    </Box>
+                    
                 </>
               );
             })()}
           </Typography>
-          <Item><CalendarTaskList/></Item>
+          
         </Grid>
       ))}
     </React.Fragment>
