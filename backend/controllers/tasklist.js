@@ -11,6 +11,7 @@ const createTasklist = async (req,res) => {
         const tasks = req.body.tasks;
 
         const tasklist = await models.Tasklist.create(req.body);
+        if (!tasklist) return res.status(500).send('Task list creation failed on the backend');
 
         if (tasks && tasks.length > 0){
             const tasksAdded = await models.Task.bulkCreate(
@@ -19,9 +20,13 @@ const createTasklist = async (req,res) => {
                     return task;
                 })
             );
-            if(!tasksAdded) return res.status(500).send('Bulk task creation failed on the backend');
+            if (!tasksAdded) return res.status(500).send('Bulk task creation failed on the backend');
         }
-        return res.status(201).json({ tasklist });
+
+        const { result, success } = await getSingleTasklist(req.body.userId, tasklist.id, res);
+        if (!success) return result;
+
+        return res.status(201).json(result);
 
     } catch (error){
         return res.status(500).json({error: error.message})
@@ -61,20 +66,11 @@ const getTasklistById = async (req, res) => {
         const userId = req.userId;
         const { tasklistId } = req.params;
         if (!tasklistId) throw noTasklistIdError;
+        
+        const { result, success } = await getSingleTasklist(userId, tasklistId, res);
+        if (!success) return result;
 
-        const tasklist = await models.Tasklist.findOne({
-            where: { id: tasklistId },
-            include: [
-                {
-                    model: models.Task,
-                    as: 'tasks',
-                }
-            ]
-        });
-        if (tasklist.userId != userId) throw authenticationError;
-
-        if (tasklist) return res.status(200).json(tasklist);
-        else return res.status(404).send();
+        return res.status(200).json(result);
 
     } catch (error){
         return res.status(500).send(error.message);
@@ -131,6 +127,26 @@ const deleteTasklist = async (req, res) => {
     } catch (error){
         return res.status(500).send(error.message);
     }
+}
+
+const getSingleTasklist = async (userId, tasklistId, res) => {
+
+    const tasklist = await models.Tasklist.findOne({
+        where: { id: tasklistId },
+        include: [
+            {
+                model: models.Task,
+                as: 'tasks',
+            }
+        ]
+    });
+
+    if (tasklist && tasklist.userId != userId)
+        return { result: res.status(403).send("Unauthorized access"), success: false };        
+
+    if (!tasklist) return { result: res.status(404).send('Tasklist does not exist for that id'), success: false };
+
+    return { result: tasklist, success: true };
 }
 
 module.exports = { 

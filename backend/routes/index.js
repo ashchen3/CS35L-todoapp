@@ -19,9 +19,8 @@ apiRouter.post('/tasks', controllers.Task.createTask);
 apiRouter.put('/tasks/:taskId', controllers.Task.updateTask);
 apiRouter.delete('/tasks/:taskId', controllers.Task.deleteTask);
 
-// Delete User
+// API for User Deletion and Searching
 apiRouter.delete('/users', controllers.User.deleteUser);
-//Search User
 apiRouter.get('/users/search', controllers.User.findUser);
 
 //Check if Server is Running
