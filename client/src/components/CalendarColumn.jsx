@@ -73,7 +73,7 @@ function FullCalendarDisplay() {
     const cols = [...Array(7)].map((_, index) => SingleColumn(index));
 
     return (
-        <Grid container spacing={2} justifyContent="space-evenly">
+        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="space-evenly">
             {cols.map((col) => (
                 <Grid item xs={colWidth} sx={gridFormat} key={col.key}>
                     {col}
