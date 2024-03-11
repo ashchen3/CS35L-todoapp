@@ -21,7 +21,11 @@ module.exports = (sequelize, DataTypes) => {
     username: { type: DataTypes.STRING, allowNull: false },
     email: DataTypes.STRING,
     pwdhash: DataTypes.STRING,
-    salt: DataTypes.STRING
+    salt: DataTypes.STRING,
+    friendReqReceivedFromIds: DataTypes.ARRAY(DataTypes.INTEGER),
+    friendReqReceivedFromNames: DataTypes.ARRAY(DataTypes.STRING),
+    friendIds: DataTypes.ARRAY(DataTypes.INTEGER),
+    friends: DataTypes.ARRAY(DataTypes.STRING)
   }, {
     sequelize,
     modelName: 'User',
