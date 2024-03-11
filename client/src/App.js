@@ -5,17 +5,19 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import "./App.css";
 import CalendarView from "./pages/CalendarView";
+import FriendListView from "./pages/FriendListView";
 import HomeView from "./pages/HomeView";
 import ListView from "./pages/ListView";
 import LoginView from "./pages/LoginView";
 import SignupView from "./pages/SignupView";
 import AnonymousRoute from "./routes/AnonymousRoute";
+import FriendRoute from "./routes/FriendRoute";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { AuthProvider } from "./services/AuthContext";
 
 const theme = createTheme({
     typography: {
-        fontFamily: `"Nunito", "Roboto", "Helvetica", "Arial", sans-serif`,
+        fontFamily: [`"Open Sans", "Roboto", "Helvetica", "Arial", sans-serif`],
     },
     palette: {
         background: {
@@ -43,8 +45,6 @@ function App() {
                 <BrowserRouter>
                     <AuthProvider>
                         <Routes>
-                            {/* Default route */}
-                            <Route path="*" element={<Navigate to="/" replace />} />
                             {/* Only non-logged in users can access login page */}
                             <Route element={<AnonymousRoute />}>
                                 <Route path="/login" element={<LoginView />} />
@@ -52,10 +52,17 @@ function App() {
                             </Route>
                             {/* Only logged in users can access other routes */}
                             <Route element={<ProtectedRoute />}>
-                                <Route path="/" element={<HomeView />} />
+                                <Route path="/" state={{ userId: 0 }} element={<HomeView />} />
                                 <Route path="/list" element={<ListView />} />
                                 <Route path="/calendar" element={<CalendarView />} />
+                                <Route path="/friends" element={<FriendListView />} />
                             </Route>
+                            <Route element={<FriendRoute />}>
+                                <Route path="/:friendId" element={<HomeView viewOnly={true} />} />
+                            </Route>
+
+                            {/* Default route
+                            <Route path="*" element={<Navigate to="/" replace />} /> */}
                         </Routes>
                     </AuthProvider>
                 </BrowserRouter>

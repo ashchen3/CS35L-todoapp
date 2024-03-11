@@ -95,7 +95,7 @@ const CollapsibleTasks = ({ uncompletedTasks }) => {
        ]
    },
  */
-function TaskListCard({ tasklist, handleTasklistDeleted }) {
+function TaskListCard({ tasklist, viewOnly, handleTasklistDeleted }) {
     const { token, logoutOnTokenExpiry } = useAuth();
     const [expanded, setExpanded] = useState(false);
 
@@ -138,12 +138,14 @@ function TaskListCard({ tasklist, handleTasklistDeleted }) {
                             <Typography variant="h5" color="primary">
                                 {tasklist.title}
                             </Typography>
-                            <IconButton
-                                onClick={(e) => handleDelete(e)}
-                                sx={{ marginLeft: "auto" }}
-                            >
-                                <DeleteIcon />
-                            </IconButton>
+                            {!viewOnly && (
+                                <IconButton
+                                    onClick={(e) => handleDelete(e)}
+                                    sx={{ marginLeft: "auto" }}
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
+                            )}
                         </Box>
                         <Typography variant="subtitle1">{tasklist.description}</Typography>
                     </CardContent>

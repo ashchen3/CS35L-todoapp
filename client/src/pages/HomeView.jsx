@@ -3,12 +3,14 @@ import Grid from "@mui/material/Unstable_Grid2";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
+import { Typography } from "@mui/material";
+import { useLocation } from "react-router-dom";
 import AddItemButton from "../components/AddItemButton";
+import CalendarIcon from "../components/CalendarIcon";
 import NewListForm from "../components/NewListForm";
 import ProfileIcon from "../components/ProfileIcon";
 import SearchBar from "../components/SearchBar";
 import TaskListCard from "../components/TaskListCard";
-import CalendarIcon from "../components/CalendarIcon";
 import useAuth from "../services/AuthContext";
 
 /**
@@ -19,7 +21,10 @@ import useAuth from "../services/AuthContext";
  * - NewListForm (rendered if above button is clicked)
  * - TaskListCard (display list of tasklists)
  */
-function HomeView() {
+function HomeView({ viewOnly = false }) {
+    const location = useLocation();
+    const friendUsername = location.pathname.split("/")[1];
+
     const { token, logoutOnTokenExpiry } = useAuth();
     const [tasklists, setTasklists] = useState();
     const [displayNewListForm, setDisplayNewListForm] = useState(false);
@@ -62,6 +67,10 @@ function HomeView() {
 
     return (
         <Box sx={{ px: 5, py: 1, bgcolor: "primary.background" }} id="home">
+            <Typography variant="h4">
+                {viewOnly ? `${friendUsername}'s Tasklists` : "Your Tasklists"}
+            </Typography>
+
             {/* Search bar and profile icon */}
             <Box sx={{ display: "flex" }}>
                 <CalendarIcon />
@@ -70,11 +79,13 @@ function HomeView() {
             </Box>
 
             {/* Create new list button and form to add list, if clicked */}
-            <AddItemButton
-                onClick={handleFormDisplay}
-                isClicked={displayNewListForm}
-                buttonText="Create New List"
-            />
+            {!viewOnly && (
+                <AddItemButton
+                    onClick={handleFormDisplay}
+                    isClicked={displayNewListForm}
+                    buttonText="Create New List"
+                />
+            )}
             {displayNewListForm && <NewListForm handleTasklistAdded={handleTasklistAdded} />}
 
             {/* List each of the tasklists added */}
@@ -89,6 +100,7 @@ function HomeView() {
                     <Grid xs={10} sm={6} md={4} key={tasklist.id}>
                         <TaskListCard
                             tasklist={tasklist}
+                            viewOnly={viewOnly}
                             handleTasklistDeleted={handleTasklistDeleted}
                         />
                     </Grid>
