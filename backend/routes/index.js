@@ -20,8 +20,11 @@ apiRouter.put('/tasks/:taskId', controllers.Task.updateTask);
 apiRouter.delete('/tasks/:taskId', controllers.Task.deleteTask);
 
 // API for User Deletion and Searching
-apiRouter.delete('/users', controllers.User.deleteUser);
 apiRouter.get('/users/search', controllers.User.findUser);
+apiRouter.get('/users/friends', controllers.Friend.getFriends);
+apiRouter.get('/users/friendreq', controllers.Friend.getFriendReqs);
+apiRouter.post('/users/friendreq', controllers.Friend.sendFriendRequest);
+apiRouter.put('/users/friendreq', controllers.Friend.acceptFriendRequest);
 
 //Check if Server is Running
 apiRouter.get('/', () => {

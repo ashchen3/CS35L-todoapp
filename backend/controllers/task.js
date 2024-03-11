@@ -116,6 +116,10 @@ const deleteTask = async (req, res) => {
     }
 }
 
+/**
+ * HELPER FUNCTIONS
+ */
+
 const getSingleTask = async (userId, taskId, res) => {
 
     const task = await models.Task.findOne({

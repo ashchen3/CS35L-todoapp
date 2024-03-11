@@ -23,6 +23,18 @@ module.exports = {
       salt: {
         type: Sequelize.STRING
       },
+      friendReqReceivedFromIds: {
+        type: Sequelize.ARRAY(Sequelize.INTEGER)
+      },
+      friendReqReceivedFromNames: {
+        type: Sequelize.ARRAY(Sequelize.STRING)
+      },
+      friendIds: {
+        type: Sequelize.ARRAY(Sequelize.INTEGER)
+      },
+      friends: {
+        type: Sequelize.ARRAY(Sequelize.STRING)
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
