@@ -63,8 +63,8 @@ function App() {
                                 {/* <Route path="/:friendId" element={<HomeView viewOnly={true} />} /> */}
                             {/* </Route> */}
 
-                            {/* Default route
-                            <Route path="*" element={<Navigate to="/" replace />} /> */}
+                            {/*Default route*/}
+                            <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
                     </AuthProvider>
                 </BrowserRouter>

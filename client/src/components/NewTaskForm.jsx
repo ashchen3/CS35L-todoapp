@@ -8,7 +8,7 @@ import useAuth from "../services/AuthContext";
 import { useState } from "react";
 
 
-function NewTaskForm({ tasklistId, handleTaskAdded }) {
+function NewTaskForm({ tasklistId, handleTaskAdded, setPopupAnchor }) {
 
     const { token, logout } = useAuth();
 
@@ -64,6 +64,7 @@ function NewTaskForm({ tasklistId, handleTaskAdded }) {
                 // Update the parent state, then clear form
                 handleTaskAdded(res.data);
                 setFormData(resetForm);
+                setPopupAnchor(null);
             })
             .catch((err) => {
                 console.log({ ...formData, tasklistId: tasklistId });

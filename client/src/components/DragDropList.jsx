@@ -1,7 +1,7 @@
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import DoneIcon from "@mui/icons-material/Done";
 import DeleteIcon from "@mui/icons-material/DeleteRounded";
-import { Box, List, ListItem, Stack, Typography, ClickAwayListener, Fab, IconButton } from "@mui/material";
+import { List, ListItem, Stack, Typography, ClickAwayListener, Fab, IconButton } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Unstable_Popup as Popup } from '@mui/base/Unstable_Popup';
 
@@ -11,7 +11,7 @@ import useAuth from "../services/AuthContext";
 import AddItemButton from "./AddItemButton";
 import NewTaskForm from "./NewTaskForm";
 
-function DraggableTaskItem({ task, index }) {
+function DraggableTaskItem({ task, index, onDelete }) {
     return (
         <Draggable key={task.id} draggableId={task.id?.toString()} index={index}>
             {(provided, snapshot) => (
@@ -31,14 +31,43 @@ function DraggableTaskItem({ task, index }) {
                     }}
                 >
                     {task.completed ? <DoneIcon /> : <></>}
-                    {task.title}
+
+                    <Typography
+                        noWrap
+                        sx={{
+                            width: "12em",
+                            pr: "2rem",
+                        }}
+                    >
+                        {task.title}
+                    </Typography>
+
+                    <Typography
+                        noWrap
+                        sx={{
+                            fontSize: 14,
+                            pr: "2rem",
+                            maxWidth: "15rem"
+                        }}
+                    >
+                        {task.description}
+                    </Typography>
+
+                    <IconButton
+                        sx={{
+                            marginLeft: "auto"
+                        }}
+                        onClick={() => onDelete(task)}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
                 </ListItem>
             )}
         </Draggable>
     );
 }
 
-function DroppableTaskList({ data, listId }) {
+function DroppableTaskList({ data, listId, onTaskDelete }) {
     return (
         <Droppable droppableId={listId}>
             {(provided, snapshot) => (
@@ -54,7 +83,7 @@ function DroppableTaskList({ data, listId }) {
                     {...provided.droppableProps}
                 >
                     {data?.map((task, index) => (
-                        <DraggableTaskItem task={task} index={index} key={index} />
+                        <DraggableTaskItem task={task} index={index} onDelete={onTaskDelete} key={index} />
                     ))}
                     {provided.placeholder}
                 </List>
@@ -70,38 +99,34 @@ const DeleteTaskBucket = ({ data, listId }) => {
                 <Fab
                     variant="extended"
                     size="small"
+                    color="primary"
                     sx={{
                         cursor: "grab",
                         textTransform: "none", 
                         my: 1,
                         p: 1,
+                        py: "1.25em",
                         marginLeft: "auto",
-                        bgcolor: "white"
-                    }} 
+                        maxWidth: "15em"
+                    }}
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    aria-label="add"
+                    aria-label="delete"
                 >
-                    <IconButton
-                        color="white"
-                        sx={{
-                            marginLeft: "auto"
-                        }}
-                    >
-                        <DeleteIcon />
-                    </IconButton>
+                    Drag here to delete!
+                    {provided.placeholder}
                 </Fab>
             )}
         </Droppable>
     );
 };
 
-function CreateTaskPopup({ anchor, tasklistId, clickAwayHandler, handleTaskAdded }){
+function CreateTaskPopup({ anchor, setPopupAnchor, tasklistId, clickAwayHandler, handleTaskAdded }){
 
     return(
         <ClickAwayListener onClickAway={clickAwayHandler}>
             <Popup open={Boolean(anchor)} anchor={anchor} placement='bottom-start'>
-                <NewTaskForm tasklistId={tasklistId} handleTaskAdded={handleTaskAdded}/>
+                <NewTaskForm tasklistId={tasklistId} handleTaskAdded={handleTaskAdded} setPopupAnchor={setPopupAnchor}/>
             </Popup>
         </ClickAwayListener>
     );
@@ -131,7 +156,7 @@ function CreateTaskPopup({ anchor, tasklistId, clickAwayHandler, handleTaskAdded
         ]
     }
  */
-function DragDropList({ tasklist, handleTaskAdded }) {
+function DragDropList({ tasklist, handleTaskAdded, setTasklist }) {
     const [completedTasks, setCompletedTasks] = useState();
     const [uncompletedTasks, setUncompletedTasks] = useState();
     const [popupAnchor, setPopupAnchor] = useState(null);
@@ -155,6 +180,41 @@ function DragDropList({ tasklist, handleTaskAdded }) {
     };
 
     /**
+     * Handles non-dragging individual task deletion behavior
+     */
+    const onTaskDelete = (task) => {
+        const tasksCopy = task.completed ? [...completedTasks] : [...uncompletedTasks];
+        const setTasks = task.completed ? setCompletedTasks : setUncompletedTasks;
+        tasksCopy.splice(tasksCopy.findIndex((someTask) => task.id === someTask.id), 1);
+
+        const tasklistTasks = tasklist?.tasks?.filter((someTask) => someTask.id !== task.id);
+
+        // Send a DELETE request to server to delete the task
+        axios
+            .delete(
+                `http://localhost:3000/api/tasks/${task.id}`,
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                }
+            )
+            .then(() => {
+                setTasks(tasksCopy);
+                setTasklist((prev) => ({
+                    ...prev,
+                    tasks: tasklistTasks
+                }))
+            })
+            .catch((err) => {
+                if (err?.response.status === 401) {
+                    alert("You need to login again!");
+                    logout();
+                }
+            });
+    }
+
+    /**
      * Handles when an item is dragged to somewhere.
      *
      * @param result - A JSON object containing the result of a drag,
@@ -171,6 +231,41 @@ function DragDropList({ tasklist, handleTaskAdded }) {
         // Determine where item is dragged from and to, as a boolean flag
         const fromCompleted = result.source.droppableId === "completed";
         const toCompleted = result.destination.droppableId === "completed";
+        const toDelete = result.destination.droppableId === "delete";
+
+        // Handle task deletion
+        if (toDelete){
+            const sourceCopy = fromCompleted ? [...completedTasks] : [...uncompletedTasks];
+            const setSource = fromCompleted ? setCompletedTasks : setUncompletedTasks;
+            sourceCopy.splice(result.source.index, 1);
+
+            const tasklistTasks = tasklist?.tasks?.filter((task) => task.id !== taskId);
+            
+            // Send a DELETE request to server to delete the task
+            axios
+                .delete(
+                    `http://localhost:3000/api/tasks/${taskId}`,
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
+                    }
+                )
+                .then(() => {
+                    setSource(sourceCopy);
+                    setTasklist((prev) => ({
+                        ...prev,
+                        tasks: tasklistTasks
+                    }))
+                })
+                .catch((err) => {
+                    if (err?.response.status === 401) {
+                        alert("You need to login again!");
+                        logout();
+                    }
+                });
+            return;
+        }
 
         // Copy of arrays to manipulate
         const sourceCopy = fromCompleted ? [...completedTasks] : [...uncompletedTasks];
@@ -241,8 +336,10 @@ function DragDropList({ tasklist, handleTaskAdded }) {
                             Uncompleted
                         </Typography>
                     </Stack>
-                    <CreateTaskPopup anchor={popupAnchor} tasklistId={tasklist?.id} clickAwayHandler={clickAwayHandler} handleTaskAdded={handleTaskAdded}/>
-                    <DroppableTaskList data={uncompletedTasks} listId="uncompleted" />
+                    <CreateTaskPopup 
+                        anchor={popupAnchor} setPopupAnchor={setPopupAnchor} 
+                        tasklistId={tasklist?.id} clickAwayHandler={clickAwayHandler} handleTaskAdded={handleTaskAdded}/>
+                    <DroppableTaskList data={uncompletedTasks} listId="uncompleted" onTaskDelete={onTaskDelete} />
                 </Grid>
                 <Grid xs={12} sm={5.5} sx={{ p: 2 }}>
                     <Stack
@@ -258,7 +355,7 @@ function DragDropList({ tasklist, handleTaskAdded }) {
                             </Typography>
                             <DeleteTaskBucket sx={{marginLeft:"auto"}} listId="deleted" />
                     </Stack>
-                    <DroppableTaskList data={completedTasks} listId="completed" />
+                    <DroppableTaskList data={completedTasks} listId="completed" onTaskDelete={onTaskDelete} />
                 </Grid>
             </DragDropContext>
         </Grid>

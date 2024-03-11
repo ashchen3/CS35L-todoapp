@@ -94,7 +94,7 @@ function renderSearchBarOption(props, option) {
         >
             <Typography
                 key={"Field1 "+option.id}
-      noWrap
+                noWrap
                 sx={{
                     width: 250,
                     pr: "1em",
@@ -104,7 +104,7 @@ function renderSearchBarOption(props, option) {
             </Typography>
 
             {option.type === "Tasks" && (
-                <Typographykey={"Field2 "+option.id}
+                <Typography key={"Field2 "+option.id}
                     noWrap
                     color="#9e9e9e"
                     sx={{
