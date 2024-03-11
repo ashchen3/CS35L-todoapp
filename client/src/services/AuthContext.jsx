@@ -36,7 +36,7 @@ const AuthProvider = ({ children }) => {
                     setToken(data.token);
                     localStorage.setItem("username", props.username);
                     localStorage.setItem("token", data.token);
-                    navigate("/home");
+                    navigate("/");
                 }
             })
             .catch((err) => {
