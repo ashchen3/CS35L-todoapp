@@ -1,19 +1,15 @@
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import DoneIcon from "@mui/icons-material/Done";
-import { Box, Container, List, ListItem, Stack, Typography } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/DeleteRounded";
+import { Box, List, ListItem, Stack, Typography, ClickAwayListener, Fab, IconButton } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-
-import { TextField, FormControlLabel, Checkbox, Button, ClickAwayListener } from "@mui/material";
 import { Unstable_Popup as Popup } from '@mui/base/Unstable_Popup';
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { MobileDateTimePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
 
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import useAuth from "../services/AuthContext";
 import AddItemButton from "./AddItemButton";
+import NewTaskForm from "./NewTaskForm";
 
 function DraggableTaskItem({ task, index }) {
     return (
@@ -67,152 +63,45 @@ function DroppableTaskList({ data, listId }) {
     );
 }
 
+const DeleteTaskBucket = ({ data, listId }) => {
+    return (
+        <Droppable droppableId='delete'>
+            {(provided, snapshot) => (
+                <Fab
+                    variant="extended"
+                    size="small"
+                    sx={{
+                        cursor: "grab",
+                        textTransform: "none", 
+                        my: 1,
+                        p: 1,
+                        marginLeft: "auto",
+                        bgcolor: "white"
+                    }} 
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    aria-label="add"
+                >
+                    <IconButton
+                        color="white"
+                        sx={{
+                            marginLeft: "auto"
+                        }}
+                    >
+                        <DeleteIcon />
+                    </IconButton>
+                </Fab>
+            )}
+        </Droppable>
+    );
+};
+
 function CreateTaskPopup({ anchor, tasklistId, clickAwayHandler, handleTaskAdded }){
-
-    const { token, logout } = useAuth();
-
-    /** Resets the form to default values, when form loaded or submitted. */
-    const resetForm = () => ({
-        title: "",
-        description: "",
-    });
-    const [formData, setFormData] = useState(resetForm);
-
-    /** Handles when a form field is entered. */
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name.split("-")[1]]: value,
-        }));
-    };
-
-    /** Handles when the task's deadline is changed via the DateTimePicker. */
-    const handleDeadlineChange = (value) => {
-        setFormData((prevData) => ({
-            ...prevData,
-            deadline: value.toISOString()
-        }));
-    };
-
-    /** Handles when the task is set (or unset) to have a deadline. */
-    const handleNoDeadlineChecked = () => {
-        var deadline = "";
-        if (formData.deadline === "") deadline = dayjs().toISOString();
-
-        setFormData((prevData) => ({
-            ...prevData,
-            deadline,
-        }));
-    };
-
-    /** POST the new form data to the server once the form has been submitted */
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        axios
-            .post("http://localhost:3000/api/tasks/", 
-                { ...formData, tasklistId: tasklistId },
-                {
-                    headers: {
-                        Authorization: token,
-                        "Content-Type": "application/json",
-                    },
-                }
-            )
-            .then((res) => {
-                // Update the parent state, then clear form
-                handleTaskAdded(res.data);
-                setFormData(resetForm);
-            })
-            .catch((err) => {
-                console.log({ ...formData, tasklistId: tasklistId });
-                if (err.response.status === 401) {
-                    alert("You need to login again!");
-                    logout();
-                }
-            });
-    };
 
     return(
         <ClickAwayListener onClickAway={clickAwayHandler}>
             <Popup open={Boolean(anchor)} anchor={anchor} placement='bottom-start'>
-                <Box
-                    sx={{
-                        mt: 1,
-                        mb: 3,
-                        py: 2,
-                        px: 3,
-                        border: 5,
-                        borderColor: "secondary.main",
-                        borderWidth: 5,
-                        borderRadius: 5,
-                        bgcolor: "#FFFFFF"
-                    }}
-                    id="add-task-form"
-                >
-                    <Typography variant="h6" sx={{ mb: "0.25em" }}>
-                        New Task
-                    </Typography>
-                    <form onSubmit={handleSubmit}>
-                        {/* Task title field */}
-                        <TextField
-                            label='Title'
-                            name="task-title"
-                            value={formData.title}
-                            onChange={handleChange}
-                            required
-                            sx={{ width: "100%", my: 1 }}
-                            size="small"
-                        />
-
-                        {/* Task description field */}
-                        <TextField
-                            label="Description"
-                            name="task-description"
-                            value={formData.description}
-                            onChange={handleChange}
-                            sx={{ width: "100%", mb: 1 }}
-                            size="small"
-                        />
-
-                        {/* Task deadline, and checkbox to disable deadline */}
-                        <Box sx={{ mb: 1 }}>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <MobileDateTimePicker
-                                    label="Deadline"
-                                    name="task-deadline"
-                                    value={formData.deadline ? dayjs(formData.deadline) : dayjs()}
-                                    onChange={handleDeadlineChange}
-                                    disabled={formData.deadline === ""}
-                                    sx={{ width: "30%" }}
-                                    required
-                                />
-                            </LocalizationProvider>
-                            <FormControlLabel
-                                sx={{ ml: 3 }}
-                                control={
-                                    <Checkbox onClick={handleNoDeadlineChecked} />
-                                }
-                                label="No deadline"
-                            />
-                        </Box>
-
-                        {/* Submit button */}
-                        <Button
-                            sx={{
-                                display: "flex",
-                                my: '1em',
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                            }}
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                        >
-                            Add task
-                        </Button>
-                    </form>
-                </Box>
+                <NewTaskForm tasklistId={tasklistId} handleTaskAdded={handleTaskAdded}/>
             </Popup>
         </ClickAwayListener>
     );
@@ -357,16 +246,17 @@ function DragDropList({ tasklist, handleTaskAdded }) {
                 </Grid>
                 <Grid xs={12} sm={5.5} sx={{ p: 2 }}>
                     <Stack
-                        sx={{
-                            height: "10%",
-                            direction: "column",
-                            justifyContent: "center",
-                            width: "fit-content",
-                        }}
-                    >
-                        <Typography variant="h5" color="primary">
-                            Completed
-                        </Typography>
+                            sx={{
+                                height: "10%",
+                                justifyContent: "center",
+                                flexWrap: "wrap",
+                                direction: "column",
+                            }}
+                        >
+                            <Typography variant="h5" color="primary">
+                                Completed
+                            </Typography>
+                            <DeleteTaskBucket sx={{marginLeft:"auto"}} listId="deleted" />
                     </Stack>
                     <DroppableTaskList data={completedTasks} listId="completed" />
                 </Grid>
