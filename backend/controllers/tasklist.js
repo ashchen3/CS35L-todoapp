@@ -35,16 +35,30 @@ const createTasklist = async (req,res) => {
     }
 }
 
-// Returns all tasklists belonging to a user (userId obtained from JWT)
+// By default, returns all tasklists belonging to a user (userId obtained from JWT)
 // If the sendTasks flag (query string param) is set to 0, the associated tasks will not be sent. By default, this flag is set to 1
+// If a username is passed in the query string, it will check if that user is a friend, and pass over his/her lists if this is the case
 const getAllTasklists = async (req, res) => {
 
     try {
         const userId = req.userId;
+        var ownerUsername = req.query.username;
+        var ownerUserId = userId;
         const sendTasks = req.query.sendTasks || 1;
 
+        const user = await models.User.findOne({ where: {id: userId} });
+        if (!user) return res.status(500).send('Internal Server Error');
+        if (!ownerUsername) ownerUsername = user.username;
+
+        if (ownerUsername != user.username){
+            const owner = await models.User.findOne({ where: {username: ownerUsername} });
+            if (!owner) return res.status(404).send('User with this username does not exist.');
+            if (!user.friends || !user.friends.includes(ownerUsername)) throw authenticationError;
+            ownerUserId = owner.id;
+        }
+
         var findTasklistOptions = {
-            where: { userId: userId },
+            where: { userId: ownerUserId },
             include: [{
                 model: models.Task,
                 as: 'tasks',
