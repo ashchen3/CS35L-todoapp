@@ -67,26 +67,20 @@ function SingleColumn(daysFromToday) {
 }
 
 
+const colWidth = 1.7
+
 function FullCalendarDisplay() {
-  return (
-    <Grid container spacing={2} justifyContent="space-evenly">
-      <Grid item xs={2.4} sx={ gridFormat }>
-        {SingleColumn(0)}
-      </Grid>
-      <Grid item xs={2.4} sx={ gridFormat }>
-        {SingleColumn(1)}
-      </Grid>
-      <Grid item xs={2.4} sx={ gridFormat }>
-        {SingleColumn(2)}
-      </Grid>
-      <Grid item xs={2.4} sx={ gridFormat }>
-        {SingleColumn(3)}
-      </Grid>
-      <Grid item xs={2.4} sx={ gridFormat }>
-        {SingleColumn(4)}
-      </Grid>
-    </Grid>
-  );
+    const cols = [...Array(7)].map((_, index) => SingleColumn(index));
+
+    return (
+        <Grid container spacing={2} justifyContent="space-evenly">
+            {cols.map((col) => (
+                <Grid item xs={colWidth} sx={gridFormat} key={col.key}>
+                    {col}
+                </Grid>
+            ))}
+        </Grid>
+    );
 }
 
 export default FullCalendarDisplay;
