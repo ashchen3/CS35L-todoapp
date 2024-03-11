@@ -70,7 +70,7 @@ function ListView() {
                 {selectedTasklist?.title}
             </Typography>
             <Box sx={{ height: "85%" }}>
-                <DragDropList tasklist={selectedTasklist} handleTaskAdded={handleTaskAdded} />
+                <DragDropList tasklist={selectedTasklist} handleTaskAdded={handleTaskAdded} setTasklist={setSelectedTasklist}/>
             </Box>
         </Box>
     );
