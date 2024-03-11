@@ -64,8 +64,8 @@ function HomeView() {
         <Box sx={{ px: 5, py: 1, bgcolor: "primary.background" }} id="home">
             {/* Search bar and profile icon */}
             <Box sx={{ display: "flex" }}>
-                <SearchBar tasklistData={tasklists} />
                 <CalendarIcon />
+                <SearchBar tasklistData={tasklists} />
                 <ProfileIcon />
             </Box>
 
