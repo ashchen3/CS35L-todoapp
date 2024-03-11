@@ -131,6 +131,10 @@ const deleteTasklist = async (req, res) => {
     }
 }
 
+/**
+ * HELPER FUNCTIONS
+ */
+
 const getSingleTasklist = async (userId, tasklistId, res) => {
 
     const tasklist = await models.Tasklist.findOne({
