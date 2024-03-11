@@ -4,36 +4,52 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 import Typography from '@mui/material/Typography';
-import { Stack } from '@mui/material';
-import sampleData from '../sample_data.json';
+import Divider from '@mui/material/Divider';
+import { Link } from "react-router-dom";
+
+import axios from "axios";
+import useAuth from "../services/AuthContext";
 
 
 function TaskList({ tasks }) {
-  return (
-    <List dense={false}>
-      {tasks.length > 0 ? (
-        tasks.map((task) => (
-          <ListItem key={task.id} sx={{ display: 'flex', justifyContent: 'center' }}>
-            <ListItemButton>
-                <ListItemText
-                primary={
-                    <>
-                    <Typography variant="body1">{task.listTitle}</Typography>
-                    <Typography variant="body2"> - {task.taskData.title}</Typography>
-                    </>
-                }
-                />
-            </ListItemButton>
-            
-          </ListItem>
-        ))
-      ) : (
-        <ListItem>
-          <ListItemText primary={<Typography variant="body1">No tasks due</Typography>} />
-        </ListItem>
-      )}
-    </List>
-  );
+    return (
+        <>
+        <List>
+        {tasks.length > 0 ? (
+            tasks.map((task) => (
+            <>
+            <ListItem key={task.id}>
+                <ListItemButton sx={{ maxWidth: '100%', borderRadius:5, textAlign:'center'}}
+                    component={Link} 
+                    to="/list" 
+                    state={{ selectedTasklistId: task.taskData.tasklistId }}
+                >
+                    <ListItemText sx={{ textDecoration: task.taskData.completed ? 'line-through' : 'none' }}
+                    primary={
+                        <>
+                            <Typography variant="body1">{task.listTitle}</Typography>
+                            <Typography variant="body2">{task.taskData.title}</Typography>
+                        </>
+                    }
+                    />
+                </ListItemButton> 
+            </ListItem>
+            <Divider variant="middle" component="li"/>
+            </>
+            ))
+        ) : (
+            <ListItem>
+                <ListItemButton sx={{ maxWidth: '100%', borderRadius:5, textAlign:'center'}}
+                    component={Link} 
+                    to="/" 
+                >
+                    <ListItemText primary={<Typography variant="body1">No tasks due</Typography>}/>
+                </ListItemButton>
+            </ListItem>
+        )}
+        </List>
+        </>
+    );
 }
 
 
@@ -66,12 +82,31 @@ function getTasksByDeadline(jsonData, inputDate) {
 }
 
 const CalendarTaskList = ({ selectedDate }) => {
-
+    
+    
     const [tasksDue, setTasksDue] = useState([]);
+    const { token, logout } = useAuth();
 
+    // Fetch tasklists' names and ids
     useEffect(() => {
-        const filteredTasks = getTasksByDeadline(sampleData, selectedDate);
-        setTasksDue(filteredTasks);
+        console.log("GET tasklists from /api/lists");
+        axios
+            .get("http://localhost:3000/api/lists", {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: token,
+                },
+            })
+            .then((res) => {
+                const filteredTasks = getTasksByDeadline(res.data, selectedDate);
+                setTasksDue(filteredTasks);
+            })
+            .catch((err) => {
+                if (err.response.status === 401) {
+                    alert("You need to login again!");
+                    logout();
+                }
+            });
     }, [selectedDate]);
 
     return (
@@ -82,3 +117,6 @@ const CalendarTaskList = ({ selectedDate }) => {
 };
 
 export default CalendarTaskList;
+
+
+
