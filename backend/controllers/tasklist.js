@@ -16,7 +16,7 @@ const createTasklist = async (req,res) => {
         if (tasks && tasks.length > 0){
             const tasksAdded = await models.Task.bulkCreate(
                 tasks.map(task => {
-                    if (task.deadline == "") delete task.deadline;
+                    if (task.deadline === "") delete task.deadline;
                     if (!task.completed) task.completed = false;
                     task['tasklistId'] = tasklist.id;
                     return task;
@@ -64,7 +64,7 @@ const getAllTasklists = async (req, res) => {
                 as: 'tasks',
             }]
         };
-        if (sendTasks == 0) delete findTasklistOptions.include;
+        if (sendTasks === 0) delete findTasklistOptions.include;
 
         const tasklists = await models.Tasklist.findAll(findTasklistOptions);
         return res.status(200).json(tasklists);
