@@ -8,6 +8,7 @@ import NewListForm from "../components/NewListForm";
 import ProfileIcon from "../components/ProfileIcon";
 import SearchBar from "../components/SearchBar";
 import TaskListCard from "../components/TaskListCard";
+import CalendarIcon from "../components/CalendarIcon";
 import useAuth from "../services/AuthContext";
 
 /**
@@ -64,6 +65,7 @@ function HomeView() {
             {/* Search bar and profile icon */}
             <Box sx={{ display: "flex" }}>
                 <SearchBar tasklistData={tasklists} />
+                <CalendarIcon />
                 <ProfileIcon />
             </Box>
 
