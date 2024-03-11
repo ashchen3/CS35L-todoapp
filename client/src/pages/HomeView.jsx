@@ -28,6 +28,13 @@ function HomeView() {
         setTasklists((prevTasklists) => [...prevTasklists, tasklist]);
     };
 
+    /** Callback to handle when a tasklist is removed by updating `tasklists` state. */
+    const handleTasklistDeleted = (tasklistToRemove) => {
+        setTasklists((prevTasklists) =>
+            prevTasklists.filter((tasklist) => tasklist.id !== tasklistToRemove.id)
+        );
+    };
+
     // Fetch and update tasklists
     useEffect(() => {
         console.log("GET tasklists from /api/lists");
@@ -81,7 +88,10 @@ function HomeView() {
             >
                 {tasklists?.map((tasklist) => (
                     <Grid xs={10} sm={6} md={4} key={tasklist.id}>
-                        <TaskListCard tasklist={tasklist} />
+                        <TaskListCard
+                            tasklist={tasklist}
+                            handleTasklistDeleted={handleTasklistDeleted}
+                        />
                     </Grid>
                 ))}
             </Grid>

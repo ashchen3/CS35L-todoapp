@@ -1,4 +1,6 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { CardActionArea, CardActions } from "@mui/material";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -8,9 +10,10 @@ import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import { CardActionArea, CardActions } from "@mui/material";
+import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import useAuth from "../services/AuthContext";
 
 /**
  * Some styles for a single Card.
@@ -92,12 +95,31 @@ const CollapsibleTasks = ({ uncompletedTasks }) => {
        ]
    },
  */
-function TaskListCard({ tasklist }) {
+function TaskListCard({ tasklist, handleTasklistDeleted }) {
+    const { token, logout } = useAuth();
     const [expanded, setExpanded] = useState(false);
 
     /** Toggle card expansion. */
     const handleExpanded = () => {
         setExpanded(!expanded);
+    };
+
+    const handleDelete = (e) => {
+        // Stop the Link attribute of the card action area from being activated
+        e.preventDefault();
+        axios
+            .delete(`http://localhost:3000/api/lists/${tasklist.id}`, {
+                headers: {
+                    Authorization: token,
+                },
+            })
+            .then(handleTasklistDeleted(tasklist))
+            .catch((err) => {
+                if (err.response.status === 401) {
+                    alert("You need to login again!");
+                    logout();
+                }
+            });
     };
 
     // All uncompleted tasks
@@ -107,15 +129,24 @@ function TaskListCard({ tasklist }) {
         <Item>
             <Card>
                 {/* Display task title and description */}
-                <CardActionArea 
-                    component={Link} 
-                    to="/list" 
+                <CardActionArea
+                    component={Link}
+                    to="/list"
                     state={{ selectedTasklistId: tasklist.id }}
-                    style={{ textDecoration: "none" }}>
+                    style={{ textDecoration: "none" }}
+                >
                     <CardContent>
-                        <Typography variant="h5" color="primary">
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Typography variant="h5" color="primary">
                                 {tasklist.title}
-                        </Typography>
+                            </Typography>
+                            <IconButton
+                                onClick={(e) => handleDelete(e)}
+                                sx={{ marginLeft: "auto" }}
+                            >
+                                <DeleteIcon />
+                            </IconButton>
+                        </Box>
                         <Typography variant="subtitle1">{tasklist.description}</Typography>
                     </CardContent>
                 </CardActionArea>
