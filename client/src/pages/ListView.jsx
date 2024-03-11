@@ -32,14 +32,14 @@ import useAuth from "../services/AuthContext";
 function ListView() {
     const [tasklists, setTasklists] = useState([]);
     const [selectedTasklist, setSelectedTasklist] = useState({});
-    const { token, logout } = useAuth();
+    const { token, logoutOnTokenExpiry } = useAuth();
     const location = useLocation();
     const selectedTasklistId = location.state ? location.state.selectedTasklistId : null;
 
     /** Callback to handle when a task is added, namely update the `selectedTasklist` state. */
     const handleTaskAdded = (task) => {
         const newTasks = [...selectedTasklist.tasks, task];
-        setSelectedTasklist((prev) => ({...prev, tasks: newTasks}));
+        setSelectedTasklist((prev) => ({ ...prev, tasks: newTasks }));
     };
 
     // Fetch and update tasklists' names and ids
@@ -59,10 +59,7 @@ function ListView() {
                 }
             })
             .catch((err) => {
-                if (err.response.status === 401) {
-                    alert("You need to login again!");
-                    logout();
-                }
+                logoutOnTokenExpiry(err);
             });
     }, []);
 
@@ -73,7 +70,7 @@ function ListView() {
                 {selectedTasklist?.title}
             </Typography>
             <Box sx={{ height: "85%" }}>
-                <DragDropList tasklist={selectedTasklist} handleTaskAdded={handleTaskAdded}/>
+                <DragDropList tasklist={selectedTasklist} handleTaskAdded={handleTaskAdded} />
             </Box>
         </Box>
     );

@@ -7,6 +7,7 @@ const AuthContext = createContext({
     token: null,
     login: () => {},
     logout: () => {},
+    logoutOnTokenExpiry: () => {},
 });
 
 const AuthProvider = ({ children }) => {
@@ -55,8 +56,16 @@ const AuthProvider = ({ children }) => {
         navigate("/login");
     };
 
+    /** Takes in an error response, checks status and logs a user out if the token has expired (401 forbidden). */
+    const logoutOnTokenExpiry = (err) => {
+        if (err.response.status === 401) {
+            alert("You need to login again!");
+            logout();
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ username, token, login, logout }}>
+        <AuthContext.Provider value={{ username, token, login, logout, logoutOnTokenExpiry }}>
             {children}
         </AuthContext.Provider>
     );

@@ -19,7 +19,7 @@ import useAuth from "../services/AuthContext";
  * - TaskListCard (display list of tasklists)
  */
 function HomeView() {
-    const { token, logout } = useAuth();
+    const { token, logoutOnTokenExpiry } = useAuth();
     const [tasklists, setTasklists] = useState();
     const [displayNewListForm, setDisplayNewListForm] = useState(false);
 
@@ -47,10 +47,7 @@ function HomeView() {
             })
             .then((res) => setTasklists(res.data))
             .catch((err) => {
-                if (err.response.status === 401) {
-                    alert("You need to login again!");
-                    logout();
-                }
+                logoutOnTokenExpiry(err);
             });
     }, []);
 

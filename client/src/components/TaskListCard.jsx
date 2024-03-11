@@ -96,7 +96,7 @@ const CollapsibleTasks = ({ uncompletedTasks }) => {
    },
  */
 function TaskListCard({ tasklist, handleTasklistDeleted }) {
-    const { token, logout } = useAuth();
+    const { token, logoutOnTokenExpiry } = useAuth();
     const [expanded, setExpanded] = useState(false);
 
     /** Toggle card expansion. */
@@ -104,6 +104,7 @@ function TaskListCard({ tasklist, handleTasklistDeleted }) {
         setExpanded(!expanded);
     };
 
+    /** Sends a DELETE request to server when a tasklist is deleted. */
     const handleDelete = (e) => {
         // Stop the Link attribute of the card action area from being activated
         e.preventDefault();
@@ -115,10 +116,7 @@ function TaskListCard({ tasklist, handleTasklistDeleted }) {
             })
             .then(handleTasklistDeleted(tasklist))
             .catch((err) => {
-                if (err.response.status === 401) {
-                    alert("You need to login again!");
-                    logout();
-                }
+                logoutOnTokenExpiry(err);
             });
     };
 
