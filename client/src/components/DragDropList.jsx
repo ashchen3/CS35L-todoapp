@@ -1,9 +1,17 @@
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
-import DoneIcon from "@mui/icons-material/Done";
+import { Unstable_Popup as Popup } from "@mui/base/Unstable_Popup";
 import DeleteIcon from "@mui/icons-material/DeleteRounded";
-import { List, ListItem, Stack, Typography, ClickAwayListener, Fab, IconButton } from "@mui/material";
+import DoneIcon from "@mui/icons-material/Done";
+import {
+    ClickAwayListener,
+    Fab,
+    IconButton,
+    List,
+    ListItem,
+    Stack,
+    Typography,
+} from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Unstable_Popup as Popup } from '@mui/base/Unstable_Popup';
 
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -47,7 +55,7 @@ function DraggableTaskItem({ task, index, onDelete }) {
                         sx={{
                             fontSize: 14,
                             pr: "2rem",
-                            maxWidth: "15rem"
+                            maxWidth: "15rem",
                         }}
                     >
                         {task.description}
@@ -55,7 +63,7 @@ function DraggableTaskItem({ task, index, onDelete }) {
 
                     <IconButton
                         sx={{
-                            marginLeft: "auto"
+                            marginLeft: "auto",
                         }}
                         onClick={() => onDelete(task)}
                     >
@@ -83,7 +91,12 @@ function DroppableTaskList({ data, listId, onTaskDelete }) {
                     {...provided.droppableProps}
                 >
                     {data?.map((task, index) => (
-                        <DraggableTaskItem task={task} index={index} onDelete={onTaskDelete} key={index} />
+                        <DraggableTaskItem
+                            task={task}
+                            index={index}
+                            onDelete={onTaskDelete}
+                            key={index}
+                        />
                     ))}
                     {provided.placeholder}
                 </List>
@@ -94,7 +107,7 @@ function DroppableTaskList({ data, listId, onTaskDelete }) {
 
 const DeleteTaskBucket = ({ data, listId }) => {
     return (
-        <Droppable droppableId='delete'>
+        <Droppable droppableId="delete">
             {(provided, snapshot) => (
                 <Fab
                     variant="extended"
@@ -102,12 +115,12 @@ const DeleteTaskBucket = ({ data, listId }) => {
                     color="primary"
                     sx={{
                         cursor: "grab",
-                        textTransform: "none", 
+                        textTransform: "none",
                         my: 1,
                         p: 1,
                         py: "1.25em",
                         marginLeft: "auto",
-                        maxWidth: "15em"
+                        width: "auto",
                     }}
                     ref={provided.innerRef}
                     {...provided.droppableProps}
@@ -121,12 +134,21 @@ const DeleteTaskBucket = ({ data, listId }) => {
     );
 };
 
-function CreateTaskPopup({ anchor, setPopupAnchor, tasklistId, clickAwayHandler, handleTaskAdded }){
-
-    return(
+function CreateTaskPopup({
+    anchor,
+    setPopupAnchor,
+    tasklistId,
+    clickAwayHandler,
+    handleTaskAdded,
+}) {
+    return (
         <ClickAwayListener onClickAway={clickAwayHandler}>
-            <Popup open={Boolean(anchor)} anchor={anchor} placement='bottom-start'>
-                <NewTaskForm tasklistId={tasklistId} handleTaskAdded={handleTaskAdded} setPopupAnchor={setPopupAnchor}/>
+            <Popup open={Boolean(anchor)} anchor={anchor} placement="bottom-start">
+                <NewTaskForm
+                    tasklistId={tasklistId}
+                    handleTaskAdded={handleTaskAdded}
+                    setPopupAnchor={setPopupAnchor}
+                />
             </Popup>
         </ClickAwayListener>
     );
@@ -185,26 +207,26 @@ function DragDropList({ tasklist, handleTaskAdded, setTasklist }) {
     const onTaskDelete = (task) => {
         const tasksCopy = task.completed ? [...completedTasks] : [...uncompletedTasks];
         const setTasks = task.completed ? setCompletedTasks : setUncompletedTasks;
-        tasksCopy.splice(tasksCopy.findIndex((someTask) => task.id === someTask.id), 1);
+        tasksCopy.splice(
+            tasksCopy.findIndex((someTask) => task.id === someTask.id),
+            1
+        );
 
         const tasklistTasks = tasklist?.tasks?.filter((someTask) => someTask.id !== task.id);
 
         // Send a DELETE request to server to delete the task
         axios
-            .delete(
-                `http://localhost:3000/api/tasks/${task.id}`,
-                {
-                    headers: {
-                        Authorization: token,
-                    },
-                }
-            )
+            .delete(`http://localhost:3000/api/tasks/${task.id}`, {
+                headers: {
+                    Authorization: token,
+                },
+            })
             .then(() => {
                 setTasks(tasksCopy);
                 setTasklist((prev) => ({
                     ...prev,
-                    tasks: tasklistTasks
-                }))
+                    tasks: tasklistTasks,
+                }));
             })
             .catch((err) => {
                 if (err?.response.status === 401) {
@@ -212,7 +234,7 @@ function DragDropList({ tasklist, handleTaskAdded, setTasklist }) {
                     logout();
                 }
             });
-    }
+    };
 
     /**
      * Handles when an item is dragged to somewhere.
@@ -234,29 +256,26 @@ function DragDropList({ tasklist, handleTaskAdded, setTasklist }) {
         const toDelete = result.destination.droppableId === "delete";
 
         // Handle task deletion
-        if (toDelete){
+        if (toDelete) {
             const sourceCopy = fromCompleted ? [...completedTasks] : [...uncompletedTasks];
             const setSource = fromCompleted ? setCompletedTasks : setUncompletedTasks;
             sourceCopy.splice(result.source.index, 1);
 
             const tasklistTasks = tasklist?.tasks?.filter((task) => task.id !== taskId);
-            
+
             // Send a DELETE request to server to delete the task
             axios
-                .delete(
-                    `http://localhost:3000/api/tasks/${taskId}`,
-                    {
-                        headers: {
-                            Authorization: token,
-                        },
-                    }
-                )
+                .delete(`http://localhost:3000/api/tasks/${taskId}`, {
+                    headers: {
+                        Authorization: token,
+                    },
+                })
                 .then(() => {
                     setSource(sourceCopy);
                     setTasklist((prev) => ({
                         ...prev,
-                        tasks: tasklistTasks
-                    }))
+                        tasks: tasklistTasks,
+                    }));
                 })
                 .catch((err) => {
                     if (err?.response.status === 401) {
@@ -283,7 +302,7 @@ function DragDropList({ tasklist, handleTaskAdded, setTasklist }) {
         destCopy.splice(result.destination.index, 0, removed);
         const setSource = fromCompleted ? setCompletedTasks : setUncompletedTasks;
         const setDest = toCompleted ? setCompletedTasks : setUncompletedTasks;
-        
+
         // Send a PUT request to server to update completion status
         axios
             .put(
@@ -297,7 +316,7 @@ function DragDropList({ tasklist, handleTaskAdded, setTasklist }) {
                         Authorization: token,
                     },
                 }
-                )
+            )
             .then(() => {
                 // Update corresponding completed and uncompleted tasks state
                 removed.completed = toCompleted;
@@ -317,7 +336,12 @@ function DragDropList({ tasklist, handleTaskAdded, setTasklist }) {
             container
             columnGap={5}
             rowGap={0}
-            sx={{ justifyContent: "center", height: { xs: "50%", sm: "100%" } }}
+            sx={{
+                justifyContent: "center",
+                height: { xs: "50%", sm: "100%" },
+                width: { xs: "50%", sm: "100%" },
+                overflowX: "clip",
+            }}
         >
             <DragDropContext onDragEnd={dragEnd}>
                 <Grid xs={12} sm={5.5} sx={{ p: 2 }}>
@@ -331,31 +355,47 @@ function DragDropList({ tasklist, handleTaskAdded, setTasklist }) {
                             justifyContent: "center",
                         }}
                     >
-                        <AddItemButton onClick={handleAddTaskButtonClick} buttonText="" isClicked={false} />
+                        <AddItemButton
+                            onClick={handleAddTaskButtonClick}
+                            buttonText=""
+                            isClicked={false}
+                        />
                         <Typography variant="h5" color="primary" sx={{ pl: 2 }}>
                             Uncompleted
                         </Typography>
                     </Stack>
-                    <CreateTaskPopup 
-                        anchor={popupAnchor} setPopupAnchor={setPopupAnchor} 
-                        tasklistId={tasklist?.id} clickAwayHandler={clickAwayHandler} handleTaskAdded={handleTaskAdded}/>
-                    <DroppableTaskList data={uncompletedTasks} listId="uncompleted" onTaskDelete={onTaskDelete} />
+                    <CreateTaskPopup
+                        anchor={popupAnchor}
+                        setPopupAnchor={setPopupAnchor}
+                        tasklistId={tasklist?.id}
+                        clickAwayHandler={clickAwayHandler}
+                        handleTaskAdded={handleTaskAdded}
+                    />
+                    <DroppableTaskList
+                        data={uncompletedTasks}
+                        listId="uncompleted"
+                        onTaskDelete={onTaskDelete}
+                    />
                 </Grid>
                 <Grid xs={12} sm={5.5} sx={{ p: 2 }}>
                     <Stack
-                            sx={{
-                                height: "10%",
-                                justifyContent: "center",
-                                flexWrap: "wrap",
-                                direction: "column",
-                            }}
-                        >
-                            <Typography variant="h5" color="primary">
-                                Completed
-                            </Typography>
-                            <DeleteTaskBucket sx={{marginLeft:"auto"}} listId="deleted" />
+                        sx={{
+                            height: "10%",
+                            justifyContent: "center",
+                            flexWrap: "wrap",
+                            direction: "column",
+                        }}
+                    >
+                        <Typography variant="h5" color="primary">
+                            Completed
+                        </Typography>
+                        <DeleteTaskBucket sx={{ marginLeft: "auto" }} listId="deleted" />
                     </Stack>
-                    <DroppableTaskList data={completedTasks} listId="completed" onTaskDelete={onTaskDelete} />
+                    <DroppableTaskList
+                        data={completedTasks}
+                        listId="completed"
+                        onTaskDelete={onTaskDelete}
+                    />
                 </Grid>
             </DragDropContext>
         </Grid>
