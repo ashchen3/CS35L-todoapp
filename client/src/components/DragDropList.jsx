@@ -120,7 +120,7 @@ const DeleteTaskBucket = ({ data, listId }) => {
                         p: 1,
                         py: "1.25em",
                         marginLeft: "auto",
-                        width: "auto",
+                        width: "10rem",
                     }}
                     ref={provided.innerRef}
                     {...provided.droppableProps}
@@ -389,7 +389,7 @@ function DragDropList({ tasklist, handleTaskAdded, setTasklist }) {
                         <Typography variant="h5" color="primary">
                             Completed
                         </Typography>
-                        <DeleteTaskBucket sx={{ marginLeft: "auto" }} listId="deleted" />
+                        <DeleteTaskBucket listId="deleted" />
                     </Stack>
                     <DroppableTaskList
                         data={completedTasks}
