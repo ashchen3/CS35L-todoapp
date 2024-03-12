@@ -32,7 +32,7 @@ function ProfileIcon() {
     };
 
     return (
-        <Box sx={{ m: "auto", px: 1 }}>
+        <Box sx={{ marginLeft: "auto" , px: 1 }}>
             <Tooltip title="Your Account">
                 <IconButton onClick={handleOpen}>
                     <Avatar alt="" src="" />
