@@ -61,7 +61,7 @@ const acceptFriendRequest = async (req, res) => {
         if (!user.friendReqReceivedFromIds || !user.friendReqReceivedFromNames) 
             throw noFriendReqFromError(friendId);
 
-        const friendIndex = user.friendReqReceivedFromIds.findIndex((element) => element == friendId);
+        const friendIndex = user.friendReqReceivedFromIds.findIndex((element) => element === friendId);
         if (friendIndex === -1) throw noFriendReqFromError(friendId);
 
         const friend = await models.User.findOne({ where: {id: friendId} });

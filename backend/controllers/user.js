@@ -4,7 +4,6 @@ const models = require('../database/models');
 
 const noUsernameError = new Error("Username not provided. Please provide it at the top level of the JSON transmitted");
 const noPasswordError = new Error("Password not provided. Please provide it in the JSON transmitted");
-const noFriendReqFromError = (friendId) => new Error("No friend request received from user " + friendId);
 
 // Requires no authorization token, but will not hand out tokens
 // Login with newly created account to obtain token
