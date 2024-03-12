@@ -23,6 +23,7 @@ apiRouter.delete('/tasks/:taskId', controllers.Task.deleteTask);
 apiRouter.get('/users/search', controllers.User.findUser);
 apiRouter.get('/users/friends', controllers.Friend.getFriends);
 apiRouter.get('/users/friendreq', controllers.Friend.getFriendReqs);
+apiRouter.get('/users/sentfriendreq', controllers.Friend.getSentFriendReqs);
 apiRouter.post('/users/friendreq', controllers.Friend.sendFriendRequest);
 apiRouter.put('/users/friendreq', controllers.Friend.acceptFriendRequest);
 

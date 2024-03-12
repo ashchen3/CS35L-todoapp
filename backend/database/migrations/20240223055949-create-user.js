@@ -29,6 +29,12 @@ module.exports = {
       friendReqReceivedFromNames: {
         type: Sequelize.ARRAY(Sequelize.STRING)
       },
+      friendReqSentIds: {
+        type: Sequelize.ARRAY(Sequelize.INTEGER)
+      },
+      friendReqSentNames: {
+        type: Sequelize.ARRAY(Sequelize.STRING)
+      },
       friendIds: {
         type: Sequelize.ARRAY(Sequelize.INTEGER)
       },

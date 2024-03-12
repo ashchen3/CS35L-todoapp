@@ -24,6 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     salt: DataTypes.STRING,
     friendReqReceivedFromIds: DataTypes.ARRAY(DataTypes.INTEGER),
     friendReqReceivedFromNames: DataTypes.ARRAY(DataTypes.STRING),
+    friendReqSentIds: DataTypes.ARRAY(DataTypes.INTEGER),
+    friendReqSentNames: DataTypes.ARRAY(DataTypes.STRING),
     friendIds: DataTypes.ARRAY(DataTypes.INTEGER),
     friends: DataTypes.ARRAY(DataTypes.STRING)
   }, {
