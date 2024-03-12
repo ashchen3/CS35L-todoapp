@@ -22,10 +22,10 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     pwdhash: DataTypes.STRING,
     salt: DataTypes.STRING,
-    friendReqReceivedFromIds: DataTypes.ARRAY(DataTypes.INTEGER),
-    friendReqReceivedFromNames: DataTypes.ARRAY(DataTypes.STRING),
-    friendReqSentIds: DataTypes.ARRAY(DataTypes.INTEGER),
-    friendReqSentNames: DataTypes.ARRAY(DataTypes.STRING),
+    friendReqRecFromIds: DataTypes.ARRAY(DataTypes.INTEGER),
+    friendReqRecFromNames: DataTypes.ARRAY(DataTypes.STRING),
+    friendReqSentToIds: DataTypes.ARRAY(DataTypes.INTEGER),
+    friendReqSentToNames: DataTypes.ARRAY(DataTypes.STRING),
     friendIds: DataTypes.ARRAY(DataTypes.INTEGER),
     friends: DataTypes.ARRAY(DataTypes.STRING)
   }, {

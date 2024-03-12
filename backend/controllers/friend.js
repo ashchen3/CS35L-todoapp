@@ -12,41 +12,39 @@ const sendFriendRequest = async (req, res) => {
 
         const requestTo = await models.User.findOne({ where: {id: friendId} });
         if (!requestTo) return res.status(404).send('User with the speciifed ID does not exist');
-        if (requestTo.friendReqReceivedFromIds && requestTo.friendReqReceivedFromIds.includes(userId))
+        if (requestTo.friendReqRecFromIds && requestTo.friendReqRecFromIds.includes(userId))
             throw Error("Friend Request Pending, do not request again");
         if (requestTo.friendIds && requestTo.friendIds.includes(userId))
             throw Error("Friend Request Denied. User is already in friendlist");
 
         const requestFrom = await models.User.findOne({ where: {id: userId} });
         if (!requestFrom) return res.status(500).send('Internal Server Error');
-        if (requestFrom.friendReqReceivedFromIds && requestFrom.friendReqReceivedFromIds.includes(friendId))
+        if (requestFrom.friendReqRecFromIds && requestFrom.friendReqRecFromIds.includes(friendId))
             throw Error("Friend Request Denied. The other user has already requested to be friends");
 
-        const [ updated ] = await models.User.update({
-            friendReqReceivedFromIds: 
-                requestTo.friendReqReceivedFromIds ? 
-                    [...(requestTo.friendReqReceivedFromIds), userId] : 
+        const [ updatedFriend ] = await models.User.update({
+            friendReqRecFromIds: 
+                requestTo.friendReqRecFromIds ? 
+                    [...(requestTo.friendReqRecFromIds), userId] : 
                     [userId],
-            friendReqReceivedFromNames: 
-                requestTo.friendReqReceivedFromNames ? 
-                    [...(requestTo.friendReqReceivedFromNames), requestFrom.username] :
+            friendReqRecFromNames: 
+                requestTo.friendReqRecFromNames ? 
+                    [...(requestTo.friendReqRecFromNames), requestFrom.username] :
                     [requestFrom.username]
         }, { where: { id: friendId }});
 
         const [ updatedUser ] = await models.User.update({
-            friendReqSentIds:
-                requestFrom.friendReqSentIds ?
-                    [...(requestFrom.friendReqSentIds), friendId]:
+            friendReqSentToIds:
+                requestFrom.friendReqSentToIds ?
+                    [...(requestFrom.friendReqSentToIds), friendId]:
                     [friendId],
-            friendReqSentNames: 
-                requestFrom.friendReqReceivedFromNames ? 
-                    [...(requestFrom.friendReqSentNames), requestTo.username] :
+            friendReqSentToNames: 
+                requestFrom.friendReqSentToNames ? 
+                    [...(requestFrom.friendReqSentToNames), requestTo.username] :
                     [requestTo.username]
-
-            
         }, {where: { id: userId }});
         
-        if(!updated || !updatedUser) return res.status(500).send('Friend request failed on the backend');
+        if(!updatedFriend || !updatedUser) return res.status(500).send('Friend request failed on the backend');
         return res.status(200).send('Friend request succeeded');
         
     } catch (error){
@@ -71,22 +69,22 @@ const acceptFriendRequest = async (req, res) => {
         if (!user) return res.status(500).send('Internal Server Error');
         if (user.friendIds && user.friendIds.includes(friendId))
             throw Error("User is already a friend!");
-        if (!user.friendReqReceivedFromIds || !user.friendReqReceivedFromNames) 
+        if (!user.friendReqRecFromIds || !user.friendReqRecFromNames) 
             throw noFriendReqFromError(friendId);
 
-        const friendIndex = user.friendReqReceivedFromIds.findIndex((element) => element === friendId);
+        const friendIndex = user.friendReqRecFromIds.findIndex((element) => element === friendId);
         if (friendIndex === -1) throw noFriendReqFromError(friendId);
 
         const friend = await models.User.findOne({ where: {id: friendId} });
         if (!friend) return res.status(404).send('Friend with the speciifed ID does not exist');
 
-        user.friendReqReceivedFromIds.splice(friendIndex, 1);
-        user.friendReqReceivedFromNames.splice(friendIndex, 1);
+        user.friendReqRecFromIds.splice(friendIndex, 1);
+        user.friendReqRecFromNames.splice(friendIndex, 1);
 
         // Remove from friend requests, add to friends for current user
-        const [ updated1 ] = await models.User.update({
-            friendReqReceivedFromIds: user.friendReqReceivedFromIds,
-            friendReqReceivedFromNames: user.friendReqReceivedFromNames,
+        const [ updatedUser ] = await models.User.update({
+            friendReqRecFromIds: user.friendReqRecFromIds,
+            friendReqRecFromNames: user.friendReqRecFromNames,
             friendIds: 
                 user.friendIds ? 
                     [...(user.friendIds), friendId] : 
@@ -97,17 +95,18 @@ const acceptFriendRequest = async (req, res) => {
                     [friend.username]
         }, { where: { id: userId }});
         
-
-        if(!updated1) return res.status(500).send('Friend request acceptance (accepter side) failed on the backend');
+        if(!updatedUser) return res.status(500).send('Friend request acceptance (accepter side) failed on the backend');
         
-        const sentIndex = friend.friendReqSentIds.findIndex((element) => element === userId);
-        friend.friendReqSentIds.splice(sentIndex, 1);
-        friend.friendReqSentNames.splice(sentIndex, 1);
+        const sentIndex = friend.friendReqSentToIds.findIndex((element) => element === userId);
+        if (sentIndex === -1) throw noFriendReqFromError(friendId);
 
-        // Add to friends for friend and delete sent friend request 
-        const [ updated2 ] = await models.User.update({
-            friendReqSentIds : friend.friendReqSentIds,
-            friendReqSentNames: user.friendReqSentNames,
+        friend.friendReqSentToIds.splice(sentIndex, 1);
+        friend.friendReqSentToNames.splice(sentIndex, 1);
+
+        // Add to friends for friend and remove from list of pending sent requests
+        const [ updatedFriend ] = await models.User.update({
+            friendReqSentToIds : friend.friendReqSentToIds,
+            friendReqSentToNames: friend.friendReqSentToNames,
             friendIds: 
                 friend.friendIds ? 
                     [...(friend.friendIds), userId] : 
@@ -118,7 +117,7 @@ const acceptFriendRequest = async (req, res) => {
                     [user.username]
         }, { where: { id: friendId }});
 
-        if(!updated2) return res.status(500).send('Friend request acceptance (requester side) failed on the backend');
+        if(!updatedFriend) return res.status(500).send('Friend request acceptance (requester side) failed on the backend');
 
         return res.status(200).send('Friend request accepted');
         
@@ -145,7 +144,7 @@ const getFriends = async (req, res) => {
     };
 };
 
-// Returns a JSON object containing two arrays - one for Ids, one for friend usernames
+// Returns a JSON object containing two arrays - one for user Ids from which friend requests were received, and the other for their usernames
 const getFriendReqs = async (req, res) => {
 
     try {
@@ -154,8 +153,8 @@ const getFriendReqs = async (req, res) => {
         if (!user) return res.status(500).send('Internal Server Error');
 
         return res.status(200).json({
-            friendReqIds: user.friendReqReceivedFromIds,
-            friendReqNames: user.friendReqReceivedFromNames
+            friendReqRecFromIds: user.friendReqRecFromIds,
+            friendReqRecFromNames: user.friendReqRecFromNames
         });
 
     } catch (error) {
@@ -163,7 +162,7 @@ const getFriendReqs = async (req, res) => {
     };
 };
 
-// Returns a JSON object containing User Id's and Usernames of sent requests
+// Returns a JSON object containing two arrays - one for user Ids to which friend requests were sent, and the other for their usernames
 const getSentFriendReqs = async (req, res) => {
 
     try {
@@ -172,8 +171,8 @@ const getSentFriendReqs = async (req, res) => {
         if (!user) return res.status(500).send('Internal Server Error');
 
         return res.status(200).json({
-            friendReqSentIds: user.friendReqSentIds,
-            friendReqSentNames: user.friendReqSentNames
+            friendReqSentToIds: user.friendReqSentToIds,
+            friendReqSentToNames: user.friendReqSentToNames
         });
 
     } catch (error) {

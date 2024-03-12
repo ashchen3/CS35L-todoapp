@@ -23,16 +23,16 @@ module.exports = {
       salt: {
         type: Sequelize.STRING
       },
-      friendReqReceivedFromIds: {
+      friendReqRecFromIds: {
         type: Sequelize.ARRAY(Sequelize.INTEGER)
       },
-      friendReqReceivedFromNames: {
+      friendReqRecFromNames: {
         type: Sequelize.ARRAY(Sequelize.STRING)
       },
-      friendReqSentIds: {
+      friendReqSentToIds: {
         type: Sequelize.ARRAY(Sequelize.INTEGER)
       },
-      friendReqSentNames: {
+      friendReqSentToNames: {
         type: Sequelize.ARRAY(Sequelize.STRING)
       },
       friendIds: {
