@@ -8,6 +8,8 @@ function CalendarIcon () {
     return (
         <Box sx={{ m: "auto", px: 1 }}>
             <IconButton 
+                size="large"
+                color="inherit"
                 component={Link}
                 to="/calendar"
             >
