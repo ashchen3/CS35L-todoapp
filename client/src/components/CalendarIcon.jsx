@@ -6,9 +6,10 @@ import { Link } from "react-router-dom";
 
 function CalendarIcon () {
     return (
-        <Box sx={{ m: "auto", px: 1 }}>
+        <Box sx={{ m: "auto", px: 1}}>
             <IconButton 
                 size="large"
+                edge="start"
                 color="inherit"
                 component={Link}
                 to="/calendar"

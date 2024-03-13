@@ -6,7 +6,7 @@ import NavBar from '../components/NavBar';
 function CalendarView() {
     return (
         <>
-            <NavBar/>
+            <NavBar centerText="Calendar"/>
             <Box sx={{ px: 3, py: 3, bgcolor: "primary.background" }} id="calendar">
                 <FullCalendarDisplay/>
             </Box>

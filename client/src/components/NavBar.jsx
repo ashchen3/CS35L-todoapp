@@ -3,40 +3,39 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 
 import CalendarIcon from './CalendarIcon';
 import ProfileIcon from './ProfileIcon';
 
-function NavBar() {
+function NavBar({centerText}) {
     return (
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton
-              size="medium"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-              component={Link}
-              to="/"
-            >
-              remembrall
-            </IconButton>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr auto' }}>
+        <Box sx={{ flexGrow: 1 }}>
+          <AppBar position="static" sx={{ width: '100%' }}>
+            <Toolbar>
+              <IconButton
+                size="medium"
+                edge="start"
+                color="inherit"
+                sx={{ mr: 2 }}
+                component={Link}
+                to="/"
+              >
+                <Typography variant="h5">remembrall</Typography>
+              </IconButton>
               <CalendarIcon />
-              
-            </div>
-            <ProfileIcon />
-          </Toolbar>
-        </AppBar>
-      </Box>  
-    );
-  }
+              <Box sx={{ flexGrow: 1 }} />
+              <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
+                <Typography variant="h5">{centerText}</Typography>
+              </div>
+              <Box sx={{ flexGrow: 1 }} />
+              <ProfileIcon />
+            </Toolbar>
+          </AppBar>
+        </Box>
+      );
+    }
   
   
 
