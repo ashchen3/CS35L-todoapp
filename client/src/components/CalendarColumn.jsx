@@ -1,5 +1,7 @@
-import * as React from 'react';
 import { Box, Grid } from '@mui/material';
+import React, {useState, useEffect} from 'react';
+import axios from "axios";
+import useAuth from "../services/AuthContext";
 
 import CalendarTaskList from './CalendarTaskList';
 
@@ -33,7 +35,7 @@ const gridFormat = {
     textAlign: "center"
 }
 
-function SingleColumn(daysFromToday) {
+function SingleColumn(inputJson, daysFromToday) {
 
     const { weekday, monthDate } = getDate(daysFromToday);              
     return (
@@ -56,7 +58,7 @@ function SingleColumn(daysFromToday) {
                 </Box>
             </Grid>
             <Grid item>
-                <Box sx={ boxFormat }><CalendarTaskList selectedDate={getAbsoluteDate(daysFromToday)}/></Box>
+                <Box sx={ boxFormat }><CalendarTaskList inputJson={inputJson} selectedDate={getAbsoluteDate(daysFromToday)}/></Box>
             </Grid>
         </Grid>
 
@@ -70,7 +72,28 @@ function SingleColumn(daysFromToday) {
 const colWidth = 1.7
 
 function FullCalendarDisplay() {
-    const cols = [...Array(7)].map((_, index) => SingleColumn(index));
+    const [taskList, setTasklists] = useState([])
+    const { token, logoutOnTokenExpiry } = useAuth();
+
+    // Fetch tasklists' names and ids
+    useEffect(() => {
+        console.log("GET tasklists from /api/lists");
+        axios
+            .get("http://localhost:3000/api/lists", {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: token,
+                },
+            })
+            .then((res) => setTasklists(res.data))
+            .catch((err) => {
+                logoutOnTokenExpiry(err);
+            });
+    }, []);
+
+    //at this point taskList is the full json.
+
+    const cols = [...Array(7)].map((_, index) => SingleColumn(taskList, index));
 
     return (
         <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} justifyContent="space-evenly">
