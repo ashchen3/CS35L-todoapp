@@ -58,8 +58,10 @@ const CollapsibleTasks = ({ uncompletedTasks }) => {
                         <Typography variant="body2">{task.title}</Typography>
                         {task.deadline && (
                             <Typography variant="caption" marginLeft="auto">
-                                {diff > oneDay && `${diff / oneDay} days left`}
-                                {diff > 0 && diff <= oneDay && `${diff / oneHour} hours left`}
+                                {diff > oneDay && `${Math.round(diff / oneDay)} days left`}
+                                {diff > 0 &&
+                                    diff <= oneDay &&
+                                    `${Math.round(diff / oneHour)} hours left`}
                                 {diff < 0 && "Overdue!"}
                             </Typography>
                         )}

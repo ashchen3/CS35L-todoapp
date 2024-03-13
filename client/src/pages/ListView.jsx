@@ -66,11 +66,18 @@ function ListView() {
 
     return (
         <>
-            <NavBar centerText={selectedTasklist?.title}/>
-            <Box sx={{ px: 5, bgcolor: "primary.background", height: "100%" }} id="list">
+            <NavBar centerText={selectedTasklist?.title} />
+            <Box
+                sx={{ px: 5, bgcolor: "primary.background", height: { xs: "100px", md: "100%" } }}
+                id="list"
+            >
                 {/* TODO: dropdown/navbar with all other tasklists here */}
                 <Box sx={{ height: "85%" }}>
-                    <DragDropList tasklist={selectedTasklist} handleTaskAdded={handleTaskAdded} setTasklist={setSelectedTasklist}/>
+                    <DragDropList
+                        tasklist={selectedTasklist}
+                        handleTaskAdded={handleTaskAdded}
+                        setTasklist={setSelectedTasklist}
+                    />
                 </Box>
             </Box>
         </>

@@ -84,20 +84,29 @@ function DroppableTaskList({ data, listId, onTaskDelete }) {
                         cursor: "grab",
                         mt: 1,
                         p: 1,
-                        border: "1px solid black",
+                        border: "1px solid gray",
+                        borderRadius: "10px",
+                        backgroundColor: "secondary.main",
                         height: { md: "80%" },
+                        textAlign: "center",
                     }}
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                 >
-                    {data?.map((task, index) => (
-                        <DraggableTaskItem
-                            task={task}
-                            index={index}
-                            onDelete={onTaskDelete}
-                            key={index}
-                        />
-                    ))}
+                    {data?.length > 0 ? (
+                        data?.map((task, index) => (
+                            <DraggableTaskItem
+                                task={task}
+                                index={index}
+                                onDelete={onTaskDelete}
+                                key={index}
+                            />
+                        ))
+                    ) : (
+                        <Typography variant="h6" sx={{ pt: "10px" }}>
+                            No items
+                        </Typography>
+                    )}
                     {provided.placeholder}
                 </List>
             )}
@@ -338,8 +347,8 @@ function DragDropList({ tasklist, handleTaskAdded, setTasklist }) {
             rowGap={0}
             sx={{
                 justifyContent: "center",
-                height: { xs: "50%", sm: "100%" },
-                width: { xs: "50%", sm: "100%" },
+                height: { xs: "100%" },
+                width: { xs: "100%" },
                 overflowX: "clip",
             }}
         >

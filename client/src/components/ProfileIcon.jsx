@@ -1,5 +1,6 @@
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import Logout from "@mui/icons-material/Logout";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PeopleIcon from "@mui/icons-material/People";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -11,6 +12,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 
+import { useNavigate } from "react-router-dom";
 import useAuth from "../services/AuthContext";
 
 /**
@@ -20,6 +22,7 @@ import useAuth from "../services/AuthContext";
 function ProfileIcon() {
     const [anchorEl, setAnchorEl] = useState(null);
     const { username, logout } = useAuth();
+    const navigate = useNavigate();
 
     /** Sets the anchor element to the profile icon once it's clicked. */
     const handleOpen = (e) => {
@@ -32,7 +35,7 @@ function ProfileIcon() {
     };
 
     return (
-        <Box sx={{ marginLeft: "auto" , px: 1 }}>
+        <Box sx={{ marginLeft: "auto", px: 1 }}>
             <Tooltip title="Your Account">
                 <IconButton onClick={handleOpen}>
                     <Avatar alt="" src="" />
@@ -76,9 +79,13 @@ function ProfileIcon() {
                     <AccountCircle sx={{ mr: 1 }} />
                     <Typography variant="h6">{username}</Typography>
                 </MenuItem>
+                <MenuItem onClick={() => navigate("/friends")}>
+                    <PeopleIcon sx={{ mr: 1 }} />
+                    <Typography variant="h6">Friends List</Typography>
+                </MenuItem>
                 <Divider />
                 <MenuItem onClick={handleClose}>
-                    <Logout />
+                    <LogoutIcon />
                     <Button onClick={logout}>Logout</Button>
                 </MenuItem>
             </Menu>

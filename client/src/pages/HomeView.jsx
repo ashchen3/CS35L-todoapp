@@ -72,6 +72,7 @@ function HomeView({ viewOnly = false }) {
     return (
         <>
             <NavBar centerText={viewOnly ? `${friendUsername}'s Tasklists` : "Your Tasklists"} />
+
             <Box sx={{ px: 5, py: 1, bgcolor: "primary.background" }} id="home">
                 {/* Search bar */}
                 {!viewOnly && (
@@ -90,24 +91,32 @@ function HomeView({ viewOnly = false }) {
                 )}
                 {displayNewListForm && <NewListForm handleTasklistAdded={handleTasklistAdded} />}
 
-                {/* List each of the tasklists added */}
-                <Grid
-                    container
-                    rowSpacing={{ xs: 1, sm: 2 }}
-                    columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-                    sx={{ my: 1 }}
-                    id="home-list"
-                >
-                    {tasklists?.map((tasklist) => (
-                        <Grid xs={10} sm={6} md={4} key={tasklist.id}>
-                            <TaskListCard
-                                tasklist={tasklist}
-                                viewOnly={viewOnly}
-                                handleTasklistDeleted={handleTasklistDeleted}
-                            />
-                        </Grid>
-                    ))}
-                </Grid>
+                {tasklists?.length > 0 ? (
+                    // List each of the tasklists added
+                    <Grid
+                        container
+                        rowSpacing={{ xs: 1, sm: 2 }}
+                        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                        sx={{ my: 1 }}
+                        id="home-list"
+                    >
+                        {tasklists?.map((tasklist) => (
+                            <Grid xs={11} sm={6} md={4} key={tasklist.id}>
+                                <TaskListCard
+                                    tasklist={tasklist}
+                                    viewOnly={viewOnly}
+                                    handleTasklistDeleted={handleTasklistDeleted}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                ) : (
+                    <Typography variant="h5" sx={{ pt: 3 }}>
+                        {!viewOnly
+                            ? "No tasklists added. Create a new tasklist now!"
+                            : `${friendUsername} has no tasklists.`}
+                    </Typography>
+                )}
             </Box>
         </>
     );
