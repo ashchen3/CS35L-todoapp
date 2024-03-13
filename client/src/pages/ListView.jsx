@@ -3,8 +3,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import DragDropList from "../components/DragDropList";
-import useAuth from "../services/AuthContext";
 import NavBar from "../components/NavBar";
+import useAuth from "../services/AuthContext";
 
 /**
  * Takes in a tasklist as prop, sample:

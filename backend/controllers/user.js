@@ -71,7 +71,7 @@ const findUser = async (req, res) => {
 
     try{
         const term = req.query.searchTerm;
-        if (!term) return res.status(400).send("No search term provided in query string");
+        // if (!term) return res.status(400).send("No search term provided in query string");
 
         const users = await models.User.findAll({
             where: {

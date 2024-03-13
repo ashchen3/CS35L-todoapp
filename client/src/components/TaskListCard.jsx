@@ -71,6 +71,25 @@ const CollapsibleTasks = ({ uncompletedTasks }) => {
 };
 
 /**
+ * Link area of a component, which is only enabled if
+ * the user is in non read-only mode (editing own tasks).
+ */
+const CardActionAreaLink = ({ children, viewOnly, linkState }) => {
+    return viewOnly ? (
+        <CardActionArea>{children}</CardActionArea>
+    ) : (
+        <CardActionArea
+            component={Link}
+            to="/list"
+            state={linkState}
+            style={{ textDecoration: "none" }}
+        >
+            {children}
+        </CardActionArea>
+    );
+};
+
+/**
  * A single Card component that displays the tasklist.
  * Sample tasklist object passed as prop:
  * {
@@ -127,11 +146,9 @@ function TaskListCard({ tasklist, viewOnly, handleTasklistDeleted }) {
         <Item>
             <Card>
                 {/* Display task title and description */}
-                <CardActionArea
-                    component={Link}
-                    to="/list"
-                    state={{ selectedTasklistId: tasklist.id }}
-                    style={{ textDecoration: "none" }}
+                <CardActionAreaLink
+                    viewOnly={viewOnly}
+                    linkState={{ selectedTasklistId: tasklist.id }}
                 >
                     <CardContent>
                         <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -149,7 +166,8 @@ function TaskListCard({ tasklist, viewOnly, handleTasklistDeleted }) {
                         </Box>
                         <Typography variant="subtitle1">{tasklist.description}</Typography>
                     </CardContent>
-                </CardActionArea>
+                </CardActionAreaLink>
+
                 <Divider />
                 {/* Display number of uncompleted tasks and a dropdown button */}
                 <CardContent sx={{ py: 1, display: "flex", alignItems: "center" }}>

@@ -7,12 +7,12 @@ import { Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import AddItemButton from "../components/AddItemButton";
 import CalendarIcon from "../components/CalendarIcon";
+import NavBar from "../components/NavBar";
 import NewListForm from "../components/NewListForm";
 import ProfileIcon from "../components/ProfileIcon";
 import SearchBar from "../components/SearchBar";
 import TaskListCard from "../components/TaskListCard";
 import useAuth from "../services/AuthContext";
-import NavBar from "../components/NavBar";
 
 /**
  * Contains the following components:
@@ -24,7 +24,7 @@ import NavBar from "../components/NavBar";
  */
 function HomeView({ viewOnly = false }) {
     const location = useLocation();
-    const friendUsername = location.pathname.split("/")[1];
+    const friendUsername = location.pathname.split("/")[2]; // /friends/friendUsername
 
     const { token, logoutOnTokenExpiry } = useAuth();
     const [tasklists, setTasklists] = useState();
@@ -51,6 +51,9 @@ function HomeView({ viewOnly = false }) {
                     "Content-Type": "application/json",
                     Authorization: token,
                 },
+                params: {
+                    username: friendUsername,
+                },
             })
             .then((res) => setTasklists(res.data))
             .catch((err) => {
@@ -68,12 +71,14 @@ function HomeView({ viewOnly = false }) {
 
     return (
         <>
-            <NavBar centerText={viewOnly ? `${friendUsername}'s Tasklists` : "Your Tasklists"}/>
+            <NavBar centerText={viewOnly ? `${friendUsername}'s Tasklists` : "Your Tasklists"} />
             <Box sx={{ px: 5, py: 1, bgcolor: "primary.background" }} id="home">
-                {/* Search bar and profile icon */}
-                <Box sx={{ display: "flex" }}>
-                    <SearchBar tasklistData={tasklists} />
-                </Box>
+                {/* Search bar */}
+                {!viewOnly && (
+                    <Box sx={{ display: "flex" }}>
+                        <SearchBar tasklistData={tasklists} />
+                    </Box>
+                )}
 
                 {/* Create new list button and form to add list, if clicked */}
                 {!viewOnly && (
