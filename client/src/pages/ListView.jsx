@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import DragDropList from "../components/DragDropList";
 import useAuth from "../services/AuthContext";
+import NavBar from "../components/NavBar";
 
 /**
  * Takes in a tasklist as prop, sample:
@@ -64,15 +65,15 @@ function ListView() {
     }, []);
 
     return (
-        <Box sx={{ px: 5, bgcolor: "primary.background", height: "100%" }} id="list">
-            {/* TODO: dropdown/navbar with all other tasklists here */}
-            <Typography variant="h4" sx={{ pt: "1em" }}>
-                {selectedTasklist?.title}
-            </Typography>
-            <Box sx={{ height: "85%" }}>
-                <DragDropList tasklist={selectedTasklist} handleTaskAdded={handleTaskAdded} setTasklist={setSelectedTasklist}/>
+        <>
+            <NavBar centerText={selectedTasklist?.title}/>
+            <Box sx={{ px: 5, bgcolor: "primary.background", height: "100%" }} id="list">
+                {/* TODO: dropdown/navbar with all other tasklists here */}
+                <Box sx={{ height: "85%" }}>
+                    <DragDropList tasklist={selectedTasklist} handleTaskAdded={handleTaskAdded} setTasklist={setSelectedTasklist}/>
+                </Box>
             </Box>
-        </Box>
+        </>
     );
 }
 

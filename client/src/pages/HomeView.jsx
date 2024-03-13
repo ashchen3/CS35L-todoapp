@@ -12,6 +12,7 @@ import ProfileIcon from "../components/ProfileIcon";
 import SearchBar from "../components/SearchBar";
 import TaskListCard from "../components/TaskListCard";
 import useAuth from "../services/AuthContext";
+import NavBar from "../components/NavBar";
 
 /**
  * Contains the following components:
@@ -66,47 +67,44 @@ function HomeView({ viewOnly = false }) {
     };
 
     return (
-        <Box sx={{ px: 5, py: 1, bgcolor: "primary.background" }} id="home">
-            <Typography variant="h4">
-                {viewOnly ? `${friendUsername}'s Tasklists` : "Your Tasklists"}
-            </Typography>
+        <>
+            <NavBar centerText={viewOnly ? `${friendUsername}'s Tasklists` : "Your Tasklists"}/>
+            <Box sx={{ px: 5, py: 1, bgcolor: "primary.background" }} id="home">
+                {/* Search bar and profile icon */}
+                <Box sx={{ display: "flex" }}>
+                    <SearchBar tasklistData={tasklists} />
+                </Box>
 
-            {/* Search bar and profile icon */}
-            <Box sx={{ display: "flex" }}>
-                <CalendarIcon />
-                <SearchBar tasklistData={tasklists} />
-                <ProfileIcon />
+                {/* Create new list button and form to add list, if clicked */}
+                {!viewOnly && (
+                    <AddItemButton
+                        onClick={handleFormDisplay}
+                        isClicked={displayNewListForm}
+                        buttonText="Create New List"
+                    />
+                )}
+                {displayNewListForm && <NewListForm handleTasklistAdded={handleTasklistAdded} />}
+
+                {/* List each of the tasklists added */}
+                <Grid
+                    container
+                    rowSpacing={{ xs: 1, sm: 2 }}
+                    columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                    sx={{ my: 1 }}
+                    id="home-list"
+                >
+                    {tasklists?.map((tasklist) => (
+                        <Grid xs={10} sm={6} md={4} key={tasklist.id}>
+                            <TaskListCard
+                                tasklist={tasklist}
+                                viewOnly={viewOnly}
+                                handleTasklistDeleted={handleTasklistDeleted}
+                            />
+                        </Grid>
+                    ))}
+                </Grid>
             </Box>
-
-            {/* Create new list button and form to add list, if clicked */}
-            {!viewOnly && (
-                <AddItemButton
-                    onClick={handleFormDisplay}
-                    isClicked={displayNewListForm}
-                    buttonText="Create New List"
-                />
-            )}
-            {displayNewListForm && <NewListForm handleTasklistAdded={handleTasklistAdded} />}
-
-            {/* List each of the tasklists added */}
-            <Grid
-                container
-                rowSpacing={{ xs: 1, sm: 2 }}
-                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-                sx={{ my: 1 }}
-                id="home-list"
-            >
-                {tasklists?.map((tasklist) => (
-                    <Grid xs={10} sm={6} md={4} key={tasklist.id}>
-                        <TaskListCard
-                            tasklist={tasklist}
-                            viewOnly={viewOnly}
-                            handleTasklistDeleted={handleTasklistDeleted}
-                        />
-                    </Grid>
-                ))}
-            </Grid>
-        </Box>
+        </>
     );
 }
 
