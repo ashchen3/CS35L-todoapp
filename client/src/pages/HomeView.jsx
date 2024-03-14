@@ -59,7 +59,9 @@ function HomeView({ viewOnly = false }) {
             .catch((err) => {
                 logoutOnTokenExpiry(err);
             });
-    }, []);
+    }, [friendUsername]);
+    // `friendUsername` is a dependency so that tasklists will be fetched
+    // when user navigates from friend to home page
 
     /**
      * Toggles the form display when user clicks on the
