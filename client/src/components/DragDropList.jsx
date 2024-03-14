@@ -2,6 +2,8 @@ import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { Unstable_Popup as Popup } from "@mui/base/Unstable_Popup";
 import DeleteIcon from "@mui/icons-material/DeleteRounded";
 import DoneIcon from "@mui/icons-material/Done";
+
+
 import {
     ClickAwayListener,
     Fab,
@@ -10,6 +12,7 @@ import {
     ListItem,
     Stack,
     Typography,
+    Box,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 
@@ -18,6 +21,7 @@ import React, { useEffect, useState } from "react";
 import useAuth from "../services/AuthContext";
 import AddItemButton from "./AddItemButton";
 import NewTaskForm from "./NewTaskForm";
+
 
 function DraggableTaskItem({ task, index, onDelete }) {
     return (
@@ -40,26 +44,29 @@ function DraggableTaskItem({ task, index, onDelete }) {
                 >
                     {task.completed ? <DoneIcon /> : <></>}
 
-                    <Typography
-                        noWrap
+                    <Box
+                        component="div" 
                         sx={{
-                            width: "12em",
-                            pr: "2rem",
-                        }}
-                    >
+                            width: "12rem", 
+                            pr: "2rem", 
+                            wordWrap: "break-word",
+                            overflow: 'hidden',
+                          }}
+                                      >
                         {task.title}
-                    </Typography>
+                    </Box>
 
-                    <Typography
+                    <Box
                         noWrap
                         sx={{
                             fontSize: 14,
                             pr: "2rem",
                             maxWidth: "15rem",
+                            wordWrap: "break-word",
                         }}
                     >
                         {task.description}
-                    </Typography>
+                    </Box>
 
                     <IconButton
                         sx={{
@@ -79,20 +86,21 @@ function DroppableTaskList({ data, listId, onTaskDelete }) {
     return (
         <Droppable droppableId={listId}>
             {(provided, snapshot) => (
-                <List
-                    sx={{
-                        cursor: "grab",
-                        mt: 1,
-                        p: 1,
-                        border: "1px solid gray",
-                        borderRadius: "10px",
-                        backgroundColor: "secondary.main",
-                        height: { md: "80%" },
-                        textAlign: "center",
-                    }}
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                >
+                    <List
+                        sx={{
+                            cursor: "grab",
+                            mt: 1,
+                            p: 1,
+                            border: "1px solid gray",
+                            borderRadius: "10px",
+                            backgroundColor: "secondary.main",
+                            height: { md: "80%" }, 
+                            overflowY: "auto", 
+                            textAlign: "center",
+                        }}
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                    >
                     {data?.length > 0 ? (
                         data?.map((task, index) => (
                             <DraggableTaskItem
@@ -187,6 +195,7 @@ function CreateTaskPopup({
         ]
     }
  */
+
 function DragDropList({ tasklist, handleTaskAdded, setTasklist }) {
     const [completedTasks, setCompletedTasks] = useState();
     const [uncompletedTasks, setUncompletedTasks] = useState();
