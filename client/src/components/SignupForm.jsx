@@ -30,6 +30,7 @@ function SignupForm() {
             })
             .then((res) => {
                 navigate("/login");
+                alert("Created account successfully. Please log in again.");
             })
             .catch((err) => {
                 setError("Username taken");
