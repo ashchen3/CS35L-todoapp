@@ -53,7 +53,7 @@ function App() {
                             </Route>
                             {/* Only logged in users can access other routes */}
                             <Route element={<ProtectedRoute />}>
-                                <Route path="/" state={{ userId: 0 }} element={<HomeView />} />
+                                <Route path="/" element={<HomeView />} />
                                 <Route path="/list" element={<ListView />} />
                                 <Route path="/calendar" element={<CalendarView />} />
                                 <Route path="/friends" element={<FriendListView />} />
