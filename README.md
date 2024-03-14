@@ -3,38 +3,22 @@
 CS 35L Winter 24 Final Project
 
 ## Setup Instructions
-Clone the repository
+First, clone the repository
 ```bash
 git clone https://github.com/ashchen3/CS35L-todoapp.git
 ```
 
-## Starting the Application
-For now, 2 terminals will be required to start both the frontend and the backend.
+### Regarding Credentials
+The API key (embedded in the ElephantSQL link) in `/backend/.env` has been intentionally expired. Contact teongseng@g.ucla.edu for the API key to be used as `DEV_DATABASE_URL`. 
 
-### Starting the Client
-In the first terminal, start the client.
-
-1. Install required dependencies in `client` directory
-```bash
-cd client
-npm install
+For the JWT secret in the same /backend/.env file, any UTF-8 string may be used. If you desire to generate a new JWT secret, use
+```js
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
+and assign it to the `JWT_SECRET` backend environment variable (in the same `/backend/.env` file). 
 
-2. Run application
+### Starting the Application
+To start the server, simply run the `startup.sh` script at the root level of the repo
 ```bash
-npm run start # inside client directory
-```
-
-### Starting the Server
-In another terminal, start the server.
-
-1. Install required dependencies in `server` directory
-```bash
-cd server
-npm install
-```
-
-2. Run application
-```bash
-npm run start # inside server directory
+./startup.sh
 ```
