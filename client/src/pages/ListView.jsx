@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
