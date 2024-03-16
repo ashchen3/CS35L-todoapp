@@ -21,6 +21,11 @@ function SignupView() {
             }}
         >
             <Box>
+                <img
+                    src="logo.png"
+                    alt="Logo"
+                    style={{ maxWidth: "15%", height: "auto", marginBottom: "10px" }}
+                />
                 <Typography variant="h4" sx={{ py: 2 }}>
                     Sign Up
                 </Typography>

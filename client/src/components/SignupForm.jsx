@@ -58,7 +58,7 @@ function SignupForm() {
                 value={username}
                 required
                 onChange={(e) => setUsername(e.target.value)}
-                fullWidth
+                sx={{ width: "25%" }}
             />
             <TextField
                 label="Password"
@@ -67,7 +67,7 @@ function SignupForm() {
                 value={password}
                 required
                 onChange={(e) => setPassword(e.target.value)}
-                fullWidth
+                sx={{ width: "25%" }}
             />
             <TextField
                 label="Confirm password"
@@ -76,7 +76,7 @@ function SignupForm() {
                 value={confirmPassword}
                 required
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                fullWidth
+                sx={{ width: "25%" }}
             />
             <Button type="submit" variant="contained">
                 Sign Up

@@ -3,7 +3,6 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import { Link } from "react-router-dom";
 import LoginForm from "../components/LoginForm";
-import logoImage from "../logo.png";
 
 /**
  * Contains the following components:
@@ -22,7 +21,11 @@ function LoginView() {
             }}
         >
             <Box>
-                <img src={logoImage} alt="Logo" style={{ maxWidth: '17%', height: 'auto', marginBottom: '10px' }} />
+                <img
+                    src="logo.png"
+                    alt="Logo"
+                    style={{ maxWidth: "17%", height: "auto", marginBottom: "10px" }}
+                />
 
                 <Typography variant="h4" sx={{ py: 2 }}>
                     Log In

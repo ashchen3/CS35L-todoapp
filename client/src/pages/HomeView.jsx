@@ -4,7 +4,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 import { Typography } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AddItemButton from "../components/AddItemButton";
 import NavBar from "../components/NavBar";
 import NewListForm from "../components/NewListForm";
@@ -21,6 +21,7 @@ import useAuth from "../services/AuthContext";
  * - TaskListCard (display list of tasklists)
  */
 function HomeView({ viewOnly = false }) {
+    const navigate = useNavigate();
     const location = useLocation();
     const friendUsername = location.pathname.split("/")[2]; // /friends/friendUsername
 
@@ -56,6 +57,9 @@ function HomeView({ viewOnly = false }) {
             .then((res) => setTasklists(res.data))
             .catch((err) => {
                 logoutOnTokenExpiry(err);
+                // Redirect user to their own home page if unauthorized (user is not friends with other user)
+                console.log(err);
+                navigate("/");
             });
     }, [friendUsername]);
     // `friendUsername` is a dependency so that tasklists will be fetched

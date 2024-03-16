@@ -37,6 +37,7 @@ function LoginForm() {
                 value={username}
                 required
                 onChange={(e) => setUsername(e.target.value)}
+                sx={{ width: "25%" }}
             />
             <TextField
                 label="Password"
@@ -45,11 +46,16 @@ function LoginForm() {
                 value={password}
                 required
                 onChange={(e) => setPassword(e.target.value)}
+                sx={{ width: "25%" }}
             />
             <Button type="submit" variant="contained">
                 Login
             </Button>
-            {error && <Typography variant="subtitle2" fontWeight="bold" color="red">{error}</Typography>}
+            {error && (
+                <Typography variant="subtitle2" fontWeight="bold" color="red">
+                    {error}
+                </Typography>
+            )}
         </Box>
     );
 }
